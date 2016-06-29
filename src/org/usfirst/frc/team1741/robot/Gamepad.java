@@ -15,28 +15,16 @@ public class Gamepad
         kUpRight
     }
     
-    protected enum AxisNumber
+    protected class AxisNumber
     {
-		kLeftXAxisNum(0),
-		kLeftYAxisNum(1),
-		kLeftTriggerAxis(2),
-		kRightTriggerAxis(3),
-		kRightXAxisNum(4),
-		kRightYAxisNum(5),
-		kDPadXAxisNum(6),
-		kDPadYAxisNum(7);
-		
-		private final int value;
-
-	    private AxisNumber(int value) 
-	    {
-	        this.value = value;
-	    }
-
-	    public int getValue() 
-	    {
-	        return value;
-	    }
+		static final int LEFT_X_AXIS_NUM = 0;
+		static final int LEFT_Y_AXIS_NUM = 1;
+		static final int LEFT_TRIGGER_AXIS = 2;
+		static final int RIGHT_TRIGGER_AXIS = 3;
+		static final int RIGHT_X_AXIS_NUM = 4;
+		static final int RIGHT_Y_AXIS_NUM = 5;
+		static final int DPAD_X_AXIS_NUM = 6;
+		static final int DPAD_Y_AXIS_NUM = 7;
 	}
 
 	protected enum StickButton
@@ -73,7 +61,7 @@ public class Gamepad
 	 */
 	float GetLeftX()
 	{
-	    return GetRawAxis(AxisNumber.kLeftXAxisNum.getValue());
+	    return GetRawAxis(AxisNumber.LEFT_X_AXIS_NUM);
 	}
 
 	/**
@@ -81,7 +69,7 @@ public class Gamepad
 	 */
 	float GetLeftY()
 	{
-	    return GetRawAxis(AxisNumber.kLeftYAxisNum.getValue());
+	    return GetRawAxis(AxisNumber.LEFT_Y_AXIS_NUM);
 	}
 
 	/**
@@ -89,7 +77,7 @@ public class Gamepad
 	 */
 	float GetRightX()
 	{
-	    return GetRawAxis(AxisNumber.kRightXAxisNum.getValue());
+	    return GetRawAxis(AxisNumber.RIGHT_X_AXIS_NUM);
 	}
 
 	/**
@@ -97,7 +85,7 @@ public class Gamepad
 	 */
 	float GetRightY()
 	{
-	    return GetRawAxis(AxisNumber.kRightYAxisNum.getValue());
+	    return GetRawAxis(AxisNumber.RIGHT_Y_AXIS_NUM);
 	}
 
 	/**
@@ -182,8 +170,8 @@ public class Gamepad
     boolean GetStart() { return GetNumberedButton(8); }
     boolean GetLeftTrigger() { return GetNumberedButton(7); }
     boolean GetRightTrigger() { return GetNumberedButton(9); }
-    float GetLTriggerAxis() { return GetRawAxis(AxisNumber.kLeftTriggerAxis.getValue()); }
-    float GetRTriggerAxis() { return GetRawAxis(AxisNumber.kRightTriggerAxis.getValue()); }
+    float GetLTriggerAxis() { return GetRawAxis(AxisNumber.LEFT_TRIGGER_AXIS); }
+    float GetRTriggerAxis() { return GetRawAxis(AxisNumber.RIGHT_TRIGGER_AXIS); }
 
 	/*
 	 * Returns a DPad Direction, not degrees.
