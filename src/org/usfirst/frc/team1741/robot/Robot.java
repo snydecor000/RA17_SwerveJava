@@ -69,6 +69,7 @@ public class Robot extends IterativeRobot {
     
     public void autonomousInit() 
     {
+    	ReloadConfig();
     	autoSelected = (String) chooser.getSelected();
 //		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
@@ -89,7 +90,7 @@ public class Robot extends IterativeRobot {
 
     public void teleopInit()
     {
-    	
+    	ReloadConfig();
     }
     
     public void teleopPeriodic() 
@@ -99,7 +100,7 @@ public class Robot extends IterativeRobot {
     
     public void testInit() 
     {
-    
+    	ReloadConfig();
     }
     
     public void testPeriodic() 
@@ -119,12 +120,12 @@ public class Robot extends IterativeRobot {
     
 	void StartLogging(String mode, Logger l)
 	{
-//		String robot = !(Config::GetSetting("isPrototype", 0) == 0) ? "_proto" : "_comp";
+//		String robot = !(Config.GetSetting("isPrototype", 0) == 0) ? "_proto" : "_comp";
 //		l.Close();
 //		time_t t = time(0);
 //		struct tm *now = localtime(&t);
 //		//don't touch it
-//		std::string dir = "/home/lvuser";
+//		String dir = "/home/lvuser";
 //		struct stat st;
 //		if(stat("/media/sda",&st) == 0)
 //		{
@@ -133,40 +134,40 @@ public class Robot extends IterativeRobot {
 //		    	dir = "/media/sda";
 //		    }
 //		}
-//		std::string name = dir + "/log-" +
+//		String name = dir + "/log-" +
 //				std::to_string(now.tm_year + 1900) +
 //				"-\0" +
 //				std::to_string(now.tm_mon + 1) +
 //				"-\0" + std::to_string(now.tm_mday) + "_\0" +
 //				std::to_string(now.tm_hour) + "-\0" +
 //				std::to_string(now.tm_min) + "-\0" + std::to_string(now.tm_sec) + "-\0" + mode + robot + ".csv";
-//		cout << name << endl;
+//		System.out.println(name);
 //		l.Open(name);
 	}
 
 	void SetupLogging()
 	{
-//		logger.AddAttribute("Time");
-////		logger.AddAttribute("AccX");
-////		logger.AddAttribute("AccY");
-////		logger.AddAttribute("AccZ");
-//		drive.SetupLogging(logger);
-//		logger.WriteAttributes();
+		logger.AddAttribute("Time");
+//		logger.AddAttribute("AccX");
+//		logger.AddAttribute("AccY");
+//		logger.AddAttribute("AccZ");
+		drive.SetupLogging(logger);
+		logger.WriteAttributes();
 	}
 
 	void Log(float time)
 	{
-//		logger.Log("Time", time);
-////		logger.Log("AccX", acceler.GetX());
-////		logger.Log("AccY", acceler.GetY());
-////		logger.Log("AccZ", acceler.GetZ());
-//		drive.Log(logger);
-//		logger.WriteLine();
+		logger.Log("Time", time);
+//		logger.Log("AccX", acceler.GetX());
+//		logger.Log("AccY", acceler.GetY());
+//		logger.Log("AccZ", acceler.GetZ());
+		drive.Log(logger);
+		logger.WriteLine();
 	}
 
 	void ReloadConfig()
 	{
-//		Config::LoadFromFile("/home/lvuser/config.txt");
-//		drive.ReloadConfig();
+		Config.LoadFromFile("/home/lvuser/config.txt");
+		drive.ReloadConfig();
 	}
 }
