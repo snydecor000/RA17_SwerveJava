@@ -25,27 +25,28 @@ public class Drive
 	
 	Drive(CANTalon fr,CANTalon fra, AnalogInput fre)
 	{
-//		SpeedP = Config.GetSetting("speedP",1);
-//		SpeedI = Config.GetSetting("speedI",0);
-//		SpeedD = Config.GetSetting("speedD",0);
-//		SteerP = Config.GetSetting("steerP",1);
-//		SteerI = Config.GetSetting("steerI",0);
-//		SteerD = Config.GetSetting("steerD",0);
-//		SteerTolerance = Config.GetSetting("Steering%Tolerance", 3);
-//		SteerSpeed = Config.GetSetting("SteerSpeed", .9);
-//		SteerEncMax = Config.GetSetting("SteerEncMax",5);
-//		TurningSpeedFactor = Config.GetSetting("turningSpeedFactor", 1);
-//		DriveCIMMaxRPM = Config.GetSetting("driveCIMmaxRPM",4000);
-		SpeedP = 1;
-		SpeedI = 0;
-		SpeedD = 0;
-		SteerP = 1;
-		SteerI = 0;
-		SteerD = 0;
-		SteerSpeed = 0.9;
-		SteerEncMax = 5;
-		TurningSpeedFactor = 1;
-		DriveCIMMaxRPM = 4000;
+		SpeedP = Config.GetSetting("speedP",1);
+		SpeedI = Config.GetSetting("speedI",0);
+		SpeedD = Config.GetSetting("speedD",0);
+		SteerP = Config.GetSetting("steerP",1);
+		SteerI = Config.GetSetting("steerI",0.01);
+		SteerD = Config.GetSetting("steerD",0);
+		SteerTolerance = Config.GetSetting("Steering%Tolerance", .5);
+		SteerSpeed = Config.GetSetting("SteerSpeed", 1);
+		SteerEncMax = Config.GetSetting("SteerEncMax",4.8);
+		TurningSpeedFactor = Config.GetSetting("turningSpeedFactor", 1);
+		DriveCIMMaxRPM = Config.GetSetting("driveCIMmaxRPM",4000);
+//		SpeedP = 1;
+//		SpeedI = 0;
+//		SpeedD = 0;
+//		SteerP = 1;
+//		SteerI = 0.01;
+//		SteerD = 0;
+//		SteerTolerance = 0.5;
+//		SteerSpeed = 1;
+//		SteerEncMax = 5;
+//		TurningSpeedFactor = 1;
+//		DriveCIMMaxRPM = 4000;
 
 		FR = fr;
 		FR.setControlMode(0);
@@ -61,12 +62,12 @@ public class Drive
 		FRc.setContinuous(true);
 		FRc.setInputRange(0,SteerEncMax);
 		FRc.setOutputRange(-SteerSpeed,SteerSpeed);
-		//FRc.setTolerance(SteerTolerance);
+		FRc.setPercentTolerance(SteerTolerance);
 		FRc.setSetpoint(0);
 		FRc.enable();
 
-//		length = Config.GetSetting("FrameLength",1);
-//		width = Config.GetSetting("FrameWidth",1);
+		length = Config.GetSetting("FrameLength",1);
+		width = Config.GetSetting("FrameWidth",1);
 		length = 1;
 		width = 1;
 		diameter = Math.sqrt(Math.pow(length,2)+Math.pow(width,2));
@@ -115,49 +116,49 @@ public class Drive
 	
 	void SetupLogging(Logger logger)
 	{
-//		logger->AddAttribute("Time");
-//		logger->AddAttribute("FRpos");
-//		logger->AddAttribute("FRCurrent");
-//		logger->AddAttribute("FRspeed");
-//		logger->AddAttribute("FRApos");
-//		logger->AddAttribute("FRACurrent");
-//		logger->AddAttribute("FREncpos");
-//		logger->AddAttribute("FREncSetpoint");
+		logger.AddAttribute("Time");
+		logger.AddAttribute("FRpos");
+		logger.AddAttribute("FRCurrent");
+		logger.AddAttribute("FRspeed");
+		logger.AddAttribute("FRApos");
+		logger.AddAttribute("FRACurrent");
+		logger.AddAttribute("FREncpos");
+		logger.AddAttribute("FREncSetpoint");
 	}
 
 	void Log(Logger logger)
 	{
-//		logger->Log("FRpos", FR->GetEncPosition());
-//		logger->Log("FRCurrent", FR->GetOutputCurrent());
-//		logger->Log("FRspeed", FR->GetSpeed());
-//		logger->Log("FRApos", FRa->GetEncPosition());
-//		logger->Log("FRACurrent", FRa->GetOutputCurrent());
-//		logger->Log("FREncpos", FRe->GetVoltage());
-//		logger->Log("FREncSetpoint", wa1*(SteerEncMax/360.0f));
-//		logger->WriteLine();
+		logger.Log("FRpos", FR.getEncPosition());
+		logger.Log("FRCurrent", FR.getOutputCurrent());
+		logger.Log("FRspeed", FR.getSpeed());
+		logger.Log("FRApos", FRa.getEncPosition());
+		logger.Log("FRACurrent", FRa.getOutputCurrent());
+		logger.Log("FREncpos", FRe.getVoltage());
+		logger.Log("FREncSetpoint", (wa1*(SteerEncMax/360.0f)));
+		logger.WriteLine();
 	}
 
 	void ReloadConfig()
 	{
-//		SpeedP = Config::GetSetting("speedP",1);
-//		SpeedI = Config::GetSetting("speedI",0);
-//		SpeedD = Config::GetSetting("speedD",0);
-//		FR->SetPID(SpeedP,SpeedI,SpeedD);
-//	/////////////////////////////////////////////////////
-//		SteerP = Config::GetSetting("steerP",1);
-//		SteerI = Config::GetSetting("steerI",0);
-//		SteerD = Config::GetSetting("steerD",0);
-//		FRc->SetPID(SteerP,SteerI,SteerD);
-//	///////////////////////////////////////////////////////////////////
-//		SteerTolerance = Config::GetSetting("Steering%Tolerance", 3);
-//		SteerSpeed = Config::GetSetting("SteerSpeed", .9);
-//		SteerEncMax = Config::GetSetting("SteerEncMax",5);
-//
-//		FRc->SetInputRange(0,SteerEncMax);
-//		FRc->SetOutputRange(-SteerSpeed,SteerSpeed);
-//		FRc->SetTolerance(SteerTolerance);
-//	/////////////////////////////////////////////////////
-//		TurningSpeedFactor = Config::GetSetting("turningSpeedFactor", 1);
-//		DriveCIMMaxRPM = Config::GetSetting("driveCIMmaxRPM",4000);
+		SpeedP = Config.GetSetting("speedP",1);
+		SpeedI = Config.GetSetting("speedI",0);
+		SpeedD = Config.GetSetting("speedD",0);
+		//FR.setPID(SpeedP,SpeedI,SpeedD);
+	/////////////////////////////////////////////////////
+		SteerP = Config.GetSetting("steerP",1);
+		SteerI = Config.GetSetting("steerI",0.01);
+		SteerD = Config.GetSetting("steerD",0);
+		FRc.setPID(SteerP,SteerI,SteerD);
+	///////////////////////////////////////////////////////////////////
+		SteerTolerance = Config.GetSetting("Steering%Tolerance", 3);
+		SteerSpeed = Config.GetSetting("SteerSpeed", .9);
+		SteerEncMax = Config.GetSetting("SteerEncMax",4.8);
+
+		FRc.setInputRange(0,SteerEncMax);
+		FRc.setOutputRange(-SteerSpeed,SteerSpeed);
+		FRc.setPercentTolerance(SteerTolerance);
+	/////////////////////////////////////////////////////
+		TurningSpeedFactor = Config.GetSetting("turningSpeedFactor", 1);
+		DriveCIMMaxRPM = Config.GetSetting("driveCIMmaxRPM",4000);
 	}
 }

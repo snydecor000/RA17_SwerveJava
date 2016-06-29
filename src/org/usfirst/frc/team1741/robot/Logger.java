@@ -75,9 +75,9 @@ public class Logger
 		return true;
 	}
 
-	boolean Log(String field, float data)
+	boolean Log(String field, double d)
 	{
-		return Log(field, String.valueOf(data));
+		return Log(field, String.valueOf(d));
 	}
 
 	boolean Log(String field, String data)
