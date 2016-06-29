@@ -134,7 +134,7 @@ public class Robot extends IterativeRobot {
 		String name = dir + "/log-" + calendar.get(Calendar.YEAR) + "-" +
 				calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + "_" +
 				calendar.get(Calendar.HOUR_OF_DAY) + "-" + calendar.get(Calendar.MINUTE) + "-" +
-				calendar.get(Calendar.SECOND) + "_" + mode + "_" + robot + ".csv";
+				calendar.get(Calendar.SECOND) + "_" + mode + robot + ".csv";
 		System.out.println(name);
 		l.Open(name);
 	}
