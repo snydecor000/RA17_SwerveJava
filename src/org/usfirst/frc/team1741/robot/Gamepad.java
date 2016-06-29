@@ -27,22 +27,10 @@ public class Gamepad
 		static final int DPAD_Y_AXIS_NUM = 7;
 	}
 
-	protected enum StickButton
+	protected class StickButton
 	{
-		kLeftAnalogStickButton(11),
-		kRightAnalogStickButton(12);
-		
-		private final int value;
-
-	    private StickButton(int value) 
-	    {
-	        this.value = value;
-	    }
-
-	    public int getValue() 
-	    {
-	        return value;
-	    }
+		static final int LEFT_ANALOG_STICK_BUTTON = 11;
+		static final int RIGHT_ANALOG_STICK_BUTTON = 12;
 	}
 
     protected DriverStation ap_ds;
@@ -147,7 +135,7 @@ public class Gamepad
 	 */
 	boolean GetLeftPush()
 	{
-	    return GetNumberedButton(StickButton.kLeftAnalogStickButton.getValue());
+	    return GetNumberedButton(StickButton.LEFT_ANALOG_STICK_BUTTON);
 	}
 
 	/**
@@ -157,7 +145,7 @@ public class Gamepad
 	 */
 	boolean GetRightPush()
 	{
-	    return GetNumberedButton(StickButton.kRightAnalogStickButton.getValue());
+	    return GetNumberedButton(StickButton.RIGHT_ANALOG_STICK_BUTTON);
 	}
 	
     boolean GetA() { return GetNumberedButton(1); }
