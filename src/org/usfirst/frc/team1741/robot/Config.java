@@ -2,6 +2,7 @@ package org.usfirst.frc.team1741.robot;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -11,13 +12,8 @@ import javax.naming.directory.InvalidSearchFilterException;
 public class Config 
 {
 	private static Map<String, Double> m_settings;
-	
-//	public Config()
-//	{
-//
-//	}
 
-	static void Dump()
+	public static void Dump()
 	{
 		System.out.println("DUMP");
 		for(Map.Entry<String, Double> e : m_settings.entrySet())
@@ -27,12 +23,12 @@ public class Config
 		System.out.println("END DUMP");
 	}
 	
-	boolean LoadFromFile(String filename)
+	public static boolean LoadFromFile(String filename)
 	{
 		return Parse(filename);
 	}
 
-	double GetSetting(String name, double reasonable_default)
+	public static double GetSetting(String name, double reasonable_default)
 	{
 		double retval = reasonable_default;
 		name = ConvertToLower(name);
@@ -45,25 +41,21 @@ public class Config
 		return retval;
 	}
 
-	void SetSetting(String name, double value)
+	public static void SetSetting(String name, double value)
 	{
 		name = ConvertToLower(name);
 		m_settings.put(name, value);
 	}
 
-	String ConvertToLower(String str)
+	public static String ConvertToLower(String str)
 	{
 		str = str.toLowerCase();
 		return str;
 	}
 
-	boolean ValidKeyChar(char ch)
+	static boolean Parse(String filename)
 	{
-		return (Character.isAlphabetic(ch) || Character.isDigit(ch) || (ch == '_'));
-	}
-
-	boolean Parse(String filename)
-	{
+		m_settings = new HashMap<String,Double>();
 		Scanner infile;
 		try
 		{
@@ -75,14 +67,18 @@ public class Config
 			return false;
 		} 
 
-		Pattern p = Pattern.compile("(#{0})\\w+ ?= ?\\d+(\\.\\d+)?");
+		Pattern p = Pattern.compile("(#{0})[\\w\\d_]+ ?= ?\\d+(\\.\\d+)?");
 		
-		while(infile.hasNext(p))
+		while(infile.hasNextLine())
 		{
-			String in = infile.next(p);
-			String[] key = in.split("=");
-			Double value = Double.parseDouble(key[1]);
-			m_settings.put(key[0], value);
+			String in = infile.nextLine();
+			if(p.matcher(in).matches())
+			{
+				String[] key = in.split(" ?=");
+				Double value = Double.parseDouble(key[1]);
+				m_settings.put(ConvertToLower(key[0]), value);
+				System.out.println(key[0] + ": " + value);
+			}
 		}
 		infile.close();
 		return true;
