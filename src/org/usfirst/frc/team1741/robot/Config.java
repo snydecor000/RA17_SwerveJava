@@ -66,7 +66,13 @@ public class Config
 			System.out.println("Couldn't find config file \"" + filename + "\"");
 			return false;
 		} 
-
+		
+		/*
+		 * Match exactly 0 '#'
+		 * Match as many alphanumeric characters + '_'
+		 * Optional ' ' around an '='
+		 * Match a number, with an optional '.' and more numbers
+		 */
 		Pattern p = Pattern.compile("(#{0})[\\w\\d_]+ ?= ?\\d+(\\.\\d+)?");
 		
 		while(infile.hasNextLine())
@@ -78,6 +84,10 @@ public class Config
 				Double value = Double.parseDouble(key[1]);
 				m_settings.put(ConvertToLower(key[0]), value);
 				System.out.println(key[0] + ": " + value);
+			}
+			else if(!in.startsWith("#"))
+			{
+				System.out.println("Could not parse line \"" + in + "\"");
 			}
 		}
 		infile.close();
