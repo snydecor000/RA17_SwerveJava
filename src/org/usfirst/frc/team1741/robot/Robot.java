@@ -1,6 +1,9 @@
 
 package org.usfirst.frc.team1741.robot;
 
+import java.io.File;
+import java.util.Calendar;
+
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
@@ -119,29 +122,20 @@ public class Robot extends IterativeRobot {
     
 	void StartLogging(String mode, Logger l)
 	{
-//		String robot = !(Config::GetSetting("isPrototype", 0) == 0) ? "_proto" : "_comp";
-//		l.Close();
-//		time_t t = time(0);
-//		struct tm *now = localtime(&t);
-//		//don't touch it
-//		std::string dir = "/home/lvuser";
-//		struct stat st;
-//		if(stat("/media/sda",&st) == 0)
-//		{
-//		    if(st.st_mode & (S_IFDIR != 0))
-//		    {
-//		    	dir = "/media/sda";
-//		    }
-//		}
-//		std::string name = dir + "/log-" +
-//				std::to_string(now.tm_year + 1900) +
-//				"-\0" +
-//				std::to_string(now.tm_mon + 1) +
-//				"-\0" + std::to_string(now.tm_mday) + "_\0" +
-//				std::to_string(now.tm_hour) + "-\0" +
-//				std::to_string(now.tm_min) + "-\0" + std::to_string(now.tm_sec) + "-\0" + mode + robot + ".csv";
-//		cout << name << endl;
-//		l.Open(name);
+		String robot = !(Config.GetSetting("isPrototype", 0) == 0) ? "_proto" : "_comp";
+		l.Close();
+		Calendar calendar = Calendar.getInstance();
+		String dir = "/home/lvuser";
+		if(new File("/media/sda").exists())
+		{
+		    dir = "/media/sda";
+		}
+		String name = dir + "/log-" + calendar.get(Calendar.YEAR) + "-" +
+				calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + "_" +
+				calendar.get(Calendar.HOUR_OF_DAY) + "-" + calendar.get(Calendar.MINUTE) + "-" +
+				calendar.get(Calendar.SECOND) + "_" + mode + "_" + robot + ".csv";
+		System.out.println(name);
+		l.Open(name);
 	}
 
 	void SetupLogging()
