@@ -72,6 +72,7 @@ public class Robot extends IterativeRobot {
     
     public void autonomousInit() 
     {
+    	ReloadConfig();
     	autoSelected = (String) chooser.getSelected();
 //		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
@@ -92,7 +93,7 @@ public class Robot extends IterativeRobot {
 
     public void teleopInit()
     {
-    	
+    	ReloadConfig();
     }
     
     public void teleopPeriodic() 
@@ -102,7 +103,7 @@ public class Robot extends IterativeRobot {
     
     public void testInit() 
     {
-    
+    	ReloadConfig();
     }
     
     public void testPeriodic() 
@@ -140,27 +141,27 @@ public class Robot extends IterativeRobot {
 
 	void SetupLogging()
 	{
-//		logger.AddAttribute("Time");
-////		logger.AddAttribute("AccX");
-////		logger.AddAttribute("AccY");
-////		logger.AddAttribute("AccZ");
-//		drive.SetupLogging(logger);
-//		logger.WriteAttributes();
+		logger.AddAttribute("Time");
+//		logger.AddAttribute("AccX");
+//		logger.AddAttribute("AccY");
+//		logger.AddAttribute("AccZ");
+		drive.SetupLogging(logger);
+		logger.WriteAttributes();
 	}
 
 	void Log(float time)
 	{
-//		logger.Log("Time", time);
-////		logger.Log("AccX", acceler.GetX());
-////		logger.Log("AccY", acceler.GetY());
-////		logger.Log("AccZ", acceler.GetZ());
-//		drive.Log(logger);
-//		logger.WriteLine();
+		logger.Log("Time", time);
+//		logger.Log("AccX", acceler.GetX());
+//		logger.Log("AccY", acceler.GetY());
+//		logger.Log("AccZ", acceler.GetZ());
+		drive.Log(logger);
+		logger.WriteLine();
 	}
 
 	void ReloadConfig()
 	{
-//		Config::LoadFromFile("/home/lvuser/config.txt");
-//		drive.ReloadConfig();
+		Config.LoadFromFile("/home/lvuser/config.txt");
+		drive.ReloadConfig();
 	}
 }
