@@ -47,7 +47,7 @@ public class Robot extends IterativeRobot {
 
     public void robotInit() 
     {
-    	Config.LoadFromFile("config.txt");
+    	Config.LoadFromFile("/home/lvuser/config.txt");
     	chooser = new SendableChooser();
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("My Auto", customAuto);
@@ -61,10 +61,10 @@ public class Robot extends IterativeRobot {
 //		gyro = new AnalogGyro(4);
 //		gyro->Reset();
 //		gyro->Calibrate();
-//		acceler = new BuiltInAccelerometer();
+		acceler = new BuiltInAccelerometer();
 		////////////////////////////////////////////////
 		logger = new Logger();
-		SetupLogging();
+		
 		timer = new Timer();
 		////////////////////////////////////////////////
 		drive = new Drive(motorFR,angleFR,absEncFR);
@@ -94,13 +94,16 @@ public class Robot extends IterativeRobot {
 
     public void teleopInit()
     {
-    	
+    	StartLogging("teleop",logger);
+    	SetupLogging();
+    	timer.reset();
+    	timer.start();
     }
     
     public void teleopPeriodic() 
     {
     	drive.Swerve(driver.GetRightX(),driver.GetRightY(),driver.GetLeftX(),0);
-    	
+    	Log(timer.get());
     }
     
     public void testInit() 
@@ -147,23 +150,23 @@ public class Robot extends IterativeRobot {
 		logger.AddAttribute("AccX");
 		logger.AddAttribute("AccY");
 		logger.AddAttribute("AccZ");
-		drive.SetupLogging(logger);
+		//drive.SetupLogging(logger);
 		logger.WriteAttributes();
 	}
 
-	void Log(float time)
+	void Log(double d)
 	{
-		logger.Log("Time", time);
+		logger.Log("Time", d);
 		logger.Log("AccX", acceler.getX());
 		logger.Log("AccY", acceler.getY());
 		logger.Log("AccZ", acceler.getZ());
-		drive.Log(logger);
+		//drive.Log(logger);
 		logger.WriteLine();
 	}
 
 	void ReloadConfig()
 	{
-//		Config::LoadFromFile("/home/lvuser/config.txt");
-//		drive.ReloadConfig();
+		Config.LoadFromFile("/home/lvuser/config.txt");
+		//drive.ReloadConfig();
 	}
 }

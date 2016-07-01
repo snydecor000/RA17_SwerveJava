@@ -4,17 +4,19 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 public class Logger 
 {
 	private String filename;
-	private PrintWriter m_log;
-	private ArrayList< Entry<String, String> > m_fields;
+	private PrintWriter m_log = null;
+	private Map<String, String> m_fields;
 
 	Logger()
 	{
-		m_fields = new ArrayList<Entry<String,String>>();
+		m_fields = new HashMap<String,String>();
 	}
 
 	boolean Open(String filename)
@@ -33,7 +35,10 @@ public class Logger
 
 	void Close()
 	{
-		m_log.close();
+		if(m_log!=null)
+		{
+			m_log.close();
+		}
 	}
 
 	boolean Reset()
@@ -46,22 +51,23 @@ public class Logger
 
 	boolean HasAttribute(String name)
 	{
-		return (FindField(name) != -1);
+		return m_fields.containsKey(name);
 	}
 
 	// TODO: needs some serious optimization most likely
-	int FindField(String name)
-	{
-		String real_name = Normalize(name);
-		for (Entry<String,String> e : m_fields)
-		{
-			if (real_name == e.getKey())
-			{
-				return m_fields.indexOf(e);
-			}
-		}
-		return -1;
-	}
+//	Entry<String,String> FindField(String name)
+//	{
+//		String real_name = Normalize(name);
+//		for (Entry<String,String> e : m_fields)
+//		{
+//			if (real_name == e.getKey())
+//			{
+//				System.out.println(e.getKey());
+//				return e;
+//			}
+//		}
+//		return null;
+//	}
 
 	boolean AddAttribute(String field)
 	{
@@ -70,7 +76,7 @@ public class Logger
 			return false; // We already have this attribute
 		}
 
-		m_fields.add(new AbstractMap.SimpleEntry<String,String>(Normalize(field), ""));
+		m_fields.put(field, "");
 
 		return true;
 	}
@@ -82,16 +88,15 @@ public class Logger
 
 	boolean Log(String field, String data)
 	{
-		int idx = FindField(field);
-		if (idx < 0) return false;
-
-		m_fields.get(idx).setValue(data);
+		if(!HasAttribute(field)) return false;
+		
+		m_fields.put(field, data);
 		return true;
 	}
 
 	boolean WriteAttributes()
 	{
-		for (Entry<String,String> e : m_fields)
+		for (Map.Entry<String,String> e : m_fields.entrySet())
 		{
 			m_log.print(e.getKey() + ',');
 		}
@@ -101,7 +106,7 @@ public class Logger
 
 	boolean WriteLine()
 	{
-		for (Entry<String,String> e : m_fields)
+		for (Map.Entry<String,String> e : m_fields.entrySet())
 		{
 			m_log.print(e.getValue() + ',');
 		}
