@@ -150,7 +150,7 @@ public class Robot extends IterativeRobot {
 		logger.AddAttribute("AccX");
 		logger.AddAttribute("AccY");
 		logger.AddAttribute("AccZ");
-		//drive.SetupLogging(logger);
+		drive.SetupLogging(logger);
 		logger.WriteAttributes();
 	}
 
@@ -160,7 +160,7 @@ public class Robot extends IterativeRobot {
 		logger.Log("AccX", acceler.getX());
 		logger.Log("AccY", acceler.getY());
 		logger.Log("AccZ", acceler.getZ());
-		//drive.Log(logger);
+		drive.Log(logger);
 		logger.WriteLine();
 	}
 
