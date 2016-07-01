@@ -11,10 +11,12 @@ public class Drive
 	private CANTalon FRa;
 	private AnalogInput FRe;
 	private PIDController FRc;
+	private FakePIDSource FReFake;
 
 	private double SpeedP,SpeedI,SpeedD;
 	private double SteerP,SteerI,SteerD;
 	private double SteerSpeed,SteerTolerance,SteerEncMax,TurningSpeedFactor,DriveCIMMaxRPM;
+	private double SteerOffsetFR;
 
 	private double length,width,diameter;
 	private double temp;
@@ -36,17 +38,7 @@ public class Drive
 		SteerEncMax = Config.GetSetting("SteerEncMax",4.792);
 		TurningSpeedFactor = Config.GetSetting("turningSpeedFactor", 1);
 		DriveCIMMaxRPM = Config.GetSetting("driveCIMmaxRPM",4000);
-//		SpeedP = 1;
-//		SpeedI = 0;
-//		SpeedD = 0;
-//		SteerP = 1;
-//		SteerI = 0.01;
-//		SteerD = 0;
-//		SteerTolerance = 0.5;
-//		SteerSpeed = 1;
-//		SteerEncMax = 5;
-//		TurningSpeedFactor = 1;
-//		DriveCIMMaxRPM = 4000;
+		SteerOffsetFR = Config.GetSetting("SteerEncOffsetFR",0);
 
 		FR = fr;
 		FR.setControlMode(0);
@@ -55,8 +47,10 @@ public class Drive
 		FRa.setControlMode(0);
 
 		FRe = fre;
+		
+		FReFake = new FakePIDSource(SteerOffsetFR,0,SteerEncMax);
 
-		FRc = new PIDController(SteerP,SteerI,SteerD,FRe,FRa);
+		FRc = new PIDController(SteerP,SteerI,SteerD,FReFake,FRa);
 		FRc.disable();
 		FRc.setContinuous(true);
 		FRc.setInputRange(0,SteerEncMax);
@@ -108,7 +102,10 @@ public class Drive
 		if(wa2 < 0){wa2 += 360;}
 		if(wa3 < 0){wa3 += 360;}
 		if(wa4 < 0){wa4 += 360;}
+		FReFake.pidSet(FRe.pidGet());
 		FRc.setSetpoint(wa1*(SteerEncMax/360.0f));
+		
+		
 		System.out.println("Actual: " + FRe.getVoltage());
 		System.out.println("Setpoint: " + FRc.getSetpoint());
 	}
@@ -133,7 +130,7 @@ public class Drive
 		Robot.logger.Log("FRApos", FRa.getEncPosition());
 		Robot.logger.Log("FRACurrent", FRa.getOutputCurrent());
 		Robot.logger.Log("FREncpos", FRe.getVoltage());
-		Robot.logger.Log("FREncSetpoint", (wa1*(SteerEncMax/360.0f)));
+		Robot.logger.Log("FREncSetpoint", FRc.getSetpoint());
 	}
 
 	void ReloadConfig()
@@ -158,5 +155,9 @@ public class Drive
 	/////////////////////////////////////////////////////
 		TurningSpeedFactor = Config.GetSetting("turningSpeedFactor", 1);
 		DriveCIMMaxRPM = Config.GetSetting("driveCIMmaxRPM",4000);
+	/////////////////////////////////////////////////////
+		SteerOffsetFR = Config.GetSetting("SteerEncOffsetFR",0);
+
+		FReFake.setOffset(SteerOffsetFR);
 	}
 }

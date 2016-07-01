@@ -67,18 +67,5 @@ public class FakePIDSource implements PIDSource
 		m_max = max;
 	}
 	
-    public static void main(String[] args) 
-    {
-    	FakePIDSource f = new FakePIDSource(-0.5,-5,5);;
-    	Scanner scan = new Scanner(System.in);
-    	double i = 0.0;
-        while(true)
-        {
-        	System.out.println("Please enter the value");
-        	i = scan.nextDouble();
-        	f.pidSet(i);
-        	System.out.println("PID Get: " + f.pidGet());
-        }
-    }	
 }
 
