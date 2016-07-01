@@ -2,9 +2,7 @@ package org.usfirst.frc.team1741.robot;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,7 +14,7 @@ public class Logger
 
 	Logger()
 	{
-		m_fields = new HashMap<String,String>();
+		m_fields = new LinkedHashMap<String,String>();
 	}
 
 	boolean Open(String filename)
