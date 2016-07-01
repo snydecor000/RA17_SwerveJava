@@ -1,0 +1,19 @@
+#Config File
+#################################
+#Swerve Variables:
+speedP = 1
+speedI = 0
+speedD = 0
+
+steerP = 2
+steerI = 0
+steerD = 0
+
+Steering%Tolerance = 0.25
+SteerSpeed = 1
+turningSpeedFactor = 1
+driveCIMmaxRPM = 4000
+
+SteerEncMax = 4.792
+SteerEncOffsetFR = 0
+#################################
