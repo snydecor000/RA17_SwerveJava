@@ -25,7 +25,7 @@ public class Robot extends IterativeRobot {
 	AnalogInput absEncFR;
 	AnalogGyro gyro;
 	BuiltInAccelerometer acceler;
-	Logger logger;
+	public static Logger logger;
 	Timer timer;
 	Drive drive;
 	Gamepad driver;
@@ -160,7 +160,7 @@ public class Robot extends IterativeRobot {
 		logger.Log("AccX", acceler.getX());
 		logger.Log("AccY", acceler.getY());
 		logger.Log("AccZ", acceler.getZ());
-		drive.Log(logger);
+		drive.Log();
 		logger.WriteLine();
 	}
 

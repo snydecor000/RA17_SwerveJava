@@ -125,16 +125,15 @@ public class Drive
 		logger.AddAttribute("FREncSetpoint");
 	}
 
-	void Log(Logger logger)
+	void Log()
 	{
-		logger.Log("FRpos", FR.getEncPosition());
-		logger.Log("FRCurrent", FR.getOutputCurrent());
-		logger.Log("FRspeed", FR.getSpeed());
-		logger.Log("FRApos", FRa.getEncPosition());
-		logger.Log("FRACurrent", FRa.getOutputCurrent());
-		logger.Log("FREncpos", FRe.getVoltage());
-		logger.Log("FREncSetpoint", (wa1*(SteerEncMax/360.0f)));
-		logger.WriteLine();
+		Robot.logger.Log("FRpos", FR.getEncPosition());
+		Robot.logger.Log("FRCurrent", FR.getOutputCurrent());
+		Robot.logger.Log("FRspeed", FR.getSpeed());
+		Robot.logger.Log("FRApos", FRa.getEncPosition());
+		Robot.logger.Log("FRACurrent", FRa.getOutputCurrent());
+		Robot.logger.Log("FREncpos", FRe.getVoltage());
+		Robot.logger.Log("FREncSetpoint", (wa1*(SteerEncMax/360.0f)));
 	}
 
 	void ReloadConfig()
