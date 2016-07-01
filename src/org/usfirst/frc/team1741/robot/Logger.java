@@ -81,7 +81,7 @@ public class Logger
 	}
 
 	boolean Log(String field, String data)
-	{;
+	{
 		int idx = FindField(field);
 		if (idx < 0) return false;
 

@@ -31,7 +31,7 @@ public class Robot extends IterativeRobot {
 	Gamepad driver;
     
 	
-    Robot()
+    public Robot()
     {
     	chooser = null;
 		motorFR = null;
@@ -47,7 +47,8 @@ public class Robot extends IterativeRobot {
 
     public void robotInit() 
     {
-        chooser = new SendableChooser();
+    	Config.LoadFromFile("config.txt");
+    	chooser = new SendableChooser();
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
@@ -63,6 +64,7 @@ public class Robot extends IterativeRobot {
 //		acceler = new BuiltInAccelerometer();
 		////////////////////////////////////////////////
 		logger = new Logger();
+		SetupLogging();
 		timer = new Timer();
 		////////////////////////////////////////////////
 		drive = new Drive(motorFR,angleFR,absEncFR);
@@ -72,7 +74,6 @@ public class Robot extends IterativeRobot {
     
     public void autonomousInit() 
     {
-    	ReloadConfig();
     	autoSelected = (String) chooser.getSelected();
 //		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
@@ -93,17 +94,18 @@ public class Robot extends IterativeRobot {
 
     public void teleopInit()
     {
-    	ReloadConfig();
+    	
     }
     
     public void teleopPeriodic() 
     {
     	drive.Swerve(driver.GetRightX(),driver.GetRightY(),driver.GetLeftX(),0);
+    	
     }
     
     public void testInit() 
     {
-    	ReloadConfig();
+    
     }
     
     public void testPeriodic() 
@@ -129,7 +131,7 @@ public class Robot extends IterativeRobot {
 		String dir = "/home/lvuser";
 		if(new File("/media/sda").exists())
 		{
-		    dir = "/media/sda";
+			dir = "/media/sda";
 		}
 		String name = dir + "/log-" + calendar.get(Calendar.YEAR) + "-" +
 				calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + "_" +
@@ -142,9 +144,9 @@ public class Robot extends IterativeRobot {
 	void SetupLogging()
 	{
 		logger.AddAttribute("Time");
-//		logger.AddAttribute("AccX");
-//		logger.AddAttribute("AccY");
-//		logger.AddAttribute("AccZ");
+		logger.AddAttribute("AccX");
+		logger.AddAttribute("AccY");
+		logger.AddAttribute("AccZ");
 		drive.SetupLogging(logger);
 		logger.WriteAttributes();
 	}
@@ -152,16 +154,16 @@ public class Robot extends IterativeRobot {
 	void Log(float time)
 	{
 		logger.Log("Time", time);
-//		logger.Log("AccX", acceler.GetX());
-//		logger.Log("AccY", acceler.GetY());
-//		logger.Log("AccZ", acceler.GetZ());
+		logger.Log("AccX", acceler.getX());
+		logger.Log("AccY", acceler.getY());
+		logger.Log("AccZ", acceler.getZ());
 		drive.Log(logger);
 		logger.WriteLine();
 	}
 
 	void ReloadConfig()
 	{
-		Config.LoadFromFile("/home/lvuser/config.txt");
-		drive.ReloadConfig();
+//		Config::LoadFromFile("/home/lvuser/config.txt");
+//		drive.ReloadConfig();
 	}
 }

@@ -3,7 +3,6 @@ package org.usfirst.frc.team1741.robot;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDSourceType;
 
 public class Drive 
 {
@@ -29,12 +28,12 @@ public class Drive
 		SpeedP = Config.GetSetting("speedP",1);
 		SpeedI = Config.GetSetting("speedI",0);
 		SpeedD = Config.GetSetting("speedD",0);
-		SteerP = Config.GetSetting("steerP",1);
-		SteerI = Config.GetSetting("steerI",0.01);
+		SteerP = Config.GetSetting("steerP",2);
+		SteerI = Config.GetSetting("steerI",0);
 		SteerD = Config.GetSetting("steerD",0);
-		SteerTolerance = Config.GetSetting("Steering%Tolerance", .5);
+		SteerTolerance = Config.GetSetting("Steering%Tolerance", .25);
 		SteerSpeed = Config.GetSetting("SteerSpeed", 1);
-		SteerEncMax = Config.GetSetting("SteerEncMax",4.8);
+		SteerEncMax = Config.GetSetting("SteerEncMax",4.792);
 		TurningSpeedFactor = Config.GetSetting("turningSpeedFactor", 1);
 		DriveCIMMaxRPM = Config.GetSetting("driveCIMmaxRPM",4000);
 //		SpeedP = 1;
@@ -59,18 +58,15 @@ public class Drive
 
 		FRc = new PIDController(SteerP,SteerI,SteerD,FRe,FRa);
 		FRc.disable();
-		//FRc.setPIDSourceType(PIDSourceType.kDisplacement);
 		FRc.setContinuous(true);
 		FRc.setInputRange(0,SteerEncMax);
 		FRc.setOutputRange(-SteerSpeed,SteerSpeed);
 		FRc.setPercentTolerance(SteerTolerance);
-		FRc.setSetpoint(0);
+		FRc.setSetpoint(2.4);
 		FRc.enable();
 
 		length = Config.GetSetting("FrameLength",1);
 		width = Config.GetSetting("FrameWidth",1);
-		length = 1;
-		width = 1;
 		diameter = Math.sqrt(Math.pow(length,2)+Math.pow(width,2));
 		temp = 0.0;
 		a = 0.0;b = 0.0;c = 0.0;d = 0.0;
@@ -113,6 +109,8 @@ public class Drive
 		if(wa3 < 0){wa3 += 360;}
 		if(wa4 < 0){wa4 += 360;}
 		FRc.setSetpoint(wa1*(SteerEncMax/360.0f));
+		System.out.println("Actual: " + FRe.getVoltage());
+		System.out.println("Setpoint: " + FRc.getSetpoint());
 	}
 	
 	void SetupLogging(Logger logger)
@@ -146,14 +144,14 @@ public class Drive
 		SpeedD = Config.GetSetting("speedD",0);
 		//FR.setPID(SpeedP,SpeedI,SpeedD);
 	/////////////////////////////////////////////////////
-		SteerP = Config.GetSetting("steerP",1);
-		SteerI = Config.GetSetting("steerI",0.01);
+		SteerP = Config.GetSetting("steerP",2);
+		SteerI = Config.GetSetting("steerI",0);
 		SteerD = Config.GetSetting("steerD",0);
 		FRc.setPID(SteerP,SteerI,SteerD);
 	///////////////////////////////////////////////////////////////////
-		SteerTolerance = Config.GetSetting("Steering%Tolerance", 3);
-		SteerSpeed = Config.GetSetting("SteerSpeed", .9);
-		SteerEncMax = Config.GetSetting("SteerEncMax",4.8);
+		SteerTolerance = Config.GetSetting("Steering%Tolerance", 0.25);
+		SteerSpeed = Config.GetSetting("SteerSpeed", 1);
+		SteerEncMax = Config.GetSetting("SteerEncMax",4.792);
 
 		FRc.setInputRange(0,SteerEncMax);
 		FRc.setOutputRange(-SteerSpeed,SteerSpeed);
