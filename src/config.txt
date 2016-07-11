@@ -5,15 +5,15 @@ speedP = 1
 speedI = 0
 speedD = 0
 
-steerP = 2
+steerP = 1
 steerI = 0
 steerD = 0
 
 Steering%Tolerance = 0.25
-SteerSpeed = 1
+SteerSpeed = .5
 turningSpeedFactor = 1
 driveCIMmaxRPM = 4000
 
 SteerEncMax = 4.792
-SteerEncOffsetFR = 0
+SteerEncOffsetFR = 0.32
 #################################
