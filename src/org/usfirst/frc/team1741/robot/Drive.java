@@ -87,6 +87,7 @@ public class Drive
 		ws2 = Math.sqrt(Math.pow(b,2) + Math.pow(d,2));
 		ws3 = Math.sqrt(Math.pow(a,2) + Math.pow(d,2));
 		ws4 = Math.sqrt(Math.pow(a,2) + Math.pow(c,2));
+		max = 0;
 		if(ws1 > max){max = ws1;}
 		if(ws2 > max){max = ws2;}
 		if(ws3 > max){max = ws3;}
@@ -98,12 +99,12 @@ public class Drive
 		wa2 = Math.atan2(b,d) * 180.0f/PI;
 		wa3 = Math.atan2(a,d) * 180.0f/PI;
 		wa4 = Math.atan2(a,c) * 180.0f/PI;
-		if(wa1 < 0){wa1 += 360;}
-		if(wa2 < 0){wa2 += 360;}
-		if(wa3 < 0){wa3 += 360;}
-		if(wa4 < 0){wa4 += 360;}
+		if(wa1 < 0){wa1 += 360;}//wa1 = FL
+		if(wa2 < 0){wa2 += 360;}//wa2 = FR
+		if(wa3 < 0){wa3 += 360;}//wa3 = BR
+		if(wa4 < 0){wa4 += 360;}//wa4 = BL
 		FReFake.pidSet(FRe.pidGet());
-		FRc.setSetpoint(wa1*(SteerEncMax/360.0f));
+		FRc.setSetpoint(wa2*(SteerEncMax/360.0f));
 		
 		
 		System.out.println("Actual: " + FRe.getVoltage());
@@ -135,6 +136,9 @@ public class Drive
 
 	void ReloadConfig()
 	{
+		length = Config.GetSetting("FrameLength",1);
+		width = Config.GetSetting("FrameWidth",1);
+	/////////////////////////////////////////////////////
 		SpeedP = Config.GetSetting("speedP",1);
 		SpeedI = Config.GetSetting("speedI",0);
 		SpeedD = Config.GetSetting("speedD",0);

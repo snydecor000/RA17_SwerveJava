@@ -16,4 +16,7 @@ driveCIMmaxRPM = 4000
 
 SteerEncMax = 4.792
 SteerEncOffsetFR = 0.32
+
+FrameLength = 23.625
+FrameWidth = 14.125
 #################################

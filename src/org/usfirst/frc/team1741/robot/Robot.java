@@ -58,9 +58,10 @@ public class Robot extends IterativeRobot {
 		////////////////////////////////////////////////
 		absEncFR = new AnalogInput(0);
 		////////////////////////////////////////////////
-//		gyro = new AnalogGyro(4);
-//		gyro->Reset();
-//		gyro->Calibrate();
+		gyro = new AnalogGyro(1);
+		gyro.setSensitivity(0.007);
+		gyro.reset();
+		gyro.calibrate();
 		acceler = new BuiltInAccelerometer();
 		////////////////////////////////////////////////
 		logger = new Logger();
@@ -96,13 +97,15 @@ public class Robot extends IterativeRobot {
     {
     	StartLogging("teleop",logger);
     	SetupLogging();
+    	ReloadConfig();
     	timer.reset();
     	timer.start();
     }
     
     public void teleopPeriodic() 
     {
-    	drive.Swerve(driver.GetRightX(),driver.GetRightY(),driver.GetLeftX(),0);
+    	System.out.println(gyro.getAngle());
+    	drive.Swerve(driver.GetRightX(),driver.GetRightY(),driver.GetLeftX(),gyro.getAngle());
     	Log(timer.get());
     }
     
@@ -167,6 +170,6 @@ public class Robot extends IterativeRobot {
 	void ReloadConfig()
 	{
 		Config.LoadFromFile("/home/lvuser/config.txt");
-		//drive.ReloadConfig();
+		drive.ReloadConfig();
 	}
 }
