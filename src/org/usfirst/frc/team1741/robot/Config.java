@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-import javax.naming.directory.InvalidSearchFilterException;
 
 public class Config 
 {

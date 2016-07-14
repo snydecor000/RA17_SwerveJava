@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1741.robot;
 
-import java.util.Scanner;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 

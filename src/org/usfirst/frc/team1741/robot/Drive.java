@@ -13,8 +13,10 @@ public class Drive
 	private PIDController FRc;
 	private FakePIDSource FReFake;
 
+	@SuppressWarnings("unused")
 	private double SpeedP,SpeedI,SpeedD;
 	private double SteerP,SteerI,SteerD;
+	@SuppressWarnings("unused")
 	private double SteerSpeed,SteerTolerance,SteerEncMax,TurningSpeedFactor,DriveCIMMaxRPM;
 	private double SteerOffsetFR;
 
