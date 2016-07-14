@@ -181,14 +181,37 @@ public class SwerveDrive
 	
 	void SetupLogging(Logger logger)
 	{
-		logger.AddAttribute("Time");
-		logger.AddAttribute("FRpos");
-		logger.AddAttribute("FRCurrent");
-		logger.AddAttribute("FRspeed");
-		logger.AddAttribute("FRApos");
-		logger.AddAttribute("FRACurrent");
-		logger.AddAttribute("FREncpos");
-		logger.AddAttribute("FREncSetpoint");
+		Robot.logger.AddAttribute("FRpos");
+		Robot.logger.AddAttribute("FRCurrent");
+		Robot.logger.AddAttribute("FRspeed");
+		Robot.logger.AddAttribute("FRApos");
+		Robot.logger.AddAttribute("FRACurrent");
+		Robot.logger.AddAttribute("FREncpos");
+		Robot.logger.AddAttribute("FREncSetpoint");
+
+		Robot.logger.AddAttribute("FLpos");
+		Robot.logger.AddAttribute("FLCurrent");
+		Robot.logger.AddAttribute("FLspeed");
+		Robot.logger.AddAttribute("FLApos");
+		Robot.logger.AddAttribute("FLACurrent");
+		Robot.logger.AddAttribute("FLEncpos");
+		Robot.logger.AddAttribute("FLEncSetpoint");
+		
+		Robot.logger.AddAttribute("BRpos");
+		Robot.logger.AddAttribute("BRCurrent");
+		Robot.logger.AddAttribute("BRspeed");
+		Robot.logger.AddAttribute("BRApos");
+		Robot.logger.AddAttribute("BRACurrent");
+		Robot.logger.AddAttribute("BREncpos");
+		Robot.logger.AddAttribute("BREncSetpoint");
+		
+		Robot.logger.AddAttribute("BLpos");
+		Robot.logger.AddAttribute("BLCurrent");
+		Robot.logger.AddAttribute("BLspeed");
+		Robot.logger.AddAttribute("BLApos");
+		Robot.logger.AddAttribute("BLACurrent");
+		Robot.logger.AddAttribute("BLEncpos");
+		Robot.logger.AddAttribute("BLEncSetpoint");
 	}
 
 	void Log()
@@ -200,6 +223,30 @@ public class SwerveDrive
 		Robot.logger.Log("FRACurrent", FRa.getOutputCurrent());
 		Robot.logger.Log("FREncpos", FRe.getVoltage());
 		Robot.logger.Log("FREncSetpoint", FRc.getSetpoint());
+		
+		Robot.logger.Log("FLpos", FL.getEncPosition());
+		Robot.logger.Log("FLCurrent", FL.getOutputCurrent());
+		Robot.logger.Log("FLspeed", FL.getSpeed());
+		Robot.logger.Log("FLApos", FLa.getEncPosition());
+		Robot.logger.Log("FLACurrent", FLa.getOutputCurrent());
+		Robot.logger.Log("FLEncpos", FLe.getVoltage());
+		Robot.logger.Log("FLEncSetpoint", FLc.getSetpoint());
+		
+		Robot.logger.Log("BRpos", BR.getEncPosition());
+		Robot.logger.Log("BRCurrent", BR.getOutputCurrent());
+		Robot.logger.Log("BRspeed", BR.getSpeed());
+		Robot.logger.Log("BRApos", BRa.getEncPosition());
+		Robot.logger.Log("BRACurrent", BRa.getOutputCurrent());
+		Robot.logger.Log("BREncpos", BRe.getVoltage());
+		Robot.logger.Log("BREncSetpoint", BRc.getSetpoint());
+		
+		Robot.logger.Log("BLpos", BL.getEncPosition());
+		Robot.logger.Log("BLCurrent", BL.getOutputCurrent());
+		Robot.logger.Log("BLspeed", BL.getSpeed());
+		Robot.logger.Log("BLApos", BLa.getEncPosition());
+		Robot.logger.Log("BLACurrent", BLa.getOutputCurrent());
+		Robot.logger.Log("BLEncpos", BLe.getVoltage());
+		Robot.logger.Log("BLEncSetpoint", BLc.getSetpoint());
 	}
 
 	void ReloadConfig()
