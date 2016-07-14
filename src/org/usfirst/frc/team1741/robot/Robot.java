@@ -5,9 +5,7 @@ import java.io.File;
 import java.util.Calendar;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -20,9 +18,6 @@ public class Robot extends IterativeRobot {
     String autoSelected;
     SendableChooser chooser;
     
-	CANTalon motorFR;
-	CANTalon angleFR;
-	AnalogInput absEncFR;
 	AnalogGyro gyro;
 	BuiltInAccelerometer acceler;
 	public static Logger logger;
@@ -34,9 +29,6 @@ public class Robot extends IterativeRobot {
     public Robot()
     {
     	chooser = null;
-		motorFR = null;
-		angleFR = null;
-		absEncFR = null;
 		gyro = null;
 		acceler = null;
 		logger = null;
@@ -53,10 +45,6 @@ public class Robot extends IterativeRobot {
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
         
-		motorFR = new CANTalon(3);
-		angleFR = new CANTalon(7);
-		////////////////////////////////////////////////
-		absEncFR = new AnalogInput(0);
 		////////////////////////////////////////////////
 		gyro = new AnalogGyro(1);
 		gyro.setSensitivity(0.007);
@@ -68,7 +56,7 @@ public class Robot extends IterativeRobot {
 		
 		timer = new Timer();
 		////////////////////////////////////////////////
-		drive = new SwerveDrive(motorFR,angleFR,absEncFR);
+		drive = new SwerveDrive(1, 2, 0, 3, 4, 1, 5, 6, 2, 7, 8, 3);
 		////////////////////////////////////////////////
 		driver = new Gamepad(0);
     }

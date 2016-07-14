@@ -9,9 +9,24 @@ public class SwerveDrive
 	private static final double PI = 3.14159265358979;
 	private CANTalon FR;
 	private CANTalon FRa;
+	private CANTalon FL;
+	private CANTalon FLa;
+	private CANTalon BR;
+	private CANTalon BRa;
+	private CANTalon BL;
+	private CANTalon BLa;
 	private AnalogInput FRe;
 	private PIDController FRc;
 	private FakePIDSource FReFake;
+	private AnalogInput FLe;
+	private PIDController FLc;
+	private FakePIDSource FLeFake;
+	private AnalogInput BRe;
+	private PIDController BRc;
+	private FakePIDSource BReFake;
+	private AnalogInput BLe;
+	private PIDController BLc;
+	private FakePIDSource BLeFake;
 
 	@SuppressWarnings("unused")
 	private double SpeedP,SpeedI,SpeedD;
@@ -27,7 +42,8 @@ public class SwerveDrive
 	private double wa1,wa2,wa3,wa4;
 	private double max;
 	
-	SwerveDrive(CANTalon fr,CANTalon fra, AnalogInput fre)
+	//SwerveDrive(CANTalon fr,CANTalon fra, AnalogInput fre)
+	SwerveDrive(int fr, int fra, int fre, int fl, int fla, int fle, int br, int bra, int bre, int bl, int bla, int ble)
 	{
 		SpeedP = Config.GetSetting("speedP",1);
 		SpeedI = Config.GetSetting("speedI",0);
@@ -42,15 +58,33 @@ public class SwerveDrive
 		DriveCIMMaxRPM = Config.GetSetting("driveCIMmaxRPM",4000);
 		SteerOffsetFR = Config.GetSetting("SteerEncOffsetFR",0);
 
-		FR = fr;
+		FR = new CANTalon(fr);
 		FR.setControlMode(0);
+		FL = new CANTalon(fl);
+		FL.setControlMode(0);
+		BR = new CANTalon(br);
+		BR.setControlMode(0);
+		BL = new CANTalon(bl);
+		BL.setControlMode(0);
 
-		FRa = fra;
+		FRa = new CANTalon(fra);
 		FRa.setControlMode(0);
+		FLa = new CANTalon(fla);
+		FLa.setControlMode(0);
+		BRa = new CANTalon(bra);
+		BRa.setControlMode(0);
+		BLa = new CANTalon(bla);
+		BLa.setControlMode(0);
 
-		FRe = fre;
+		FRe = new AnalogInput(fre);
+		FLe = new AnalogInput(fle);
+		BRe = new AnalogInput(bre);
+		BLe = new AnalogInput(ble);
 		
 		FReFake = new FakePIDSource(SteerOffsetFR,0,SteerEncMax);
+		FLeFake = new FakePIDSource(SteerOffsetFR,0,SteerEncMax);
+		BReFake = new FakePIDSource(SteerOffsetFR,0,SteerEncMax);
+		BLeFake = new FakePIDSource(SteerOffsetFR,0,SteerEncMax);
 
 		FRc = new PIDController(SteerP,SteerI,SteerD,FReFake,FRa);
 		FRc.disable();
@@ -60,6 +94,30 @@ public class SwerveDrive
 		FRc.setPercentTolerance(SteerTolerance);
 		FRc.setSetpoint(2.4);
 		FRc.enable();
+		FLc = new PIDController(SteerP,SteerI,SteerD,FLeFake,FLa);
+		FLc.disable();
+		FLc.setContinuous(true);
+		FLc.setInputRange(0,SteerEncMax);
+		FLc.setOutputRange(-SteerSpeed,SteerSpeed);
+		FLc.setPercentTolerance(SteerTolerance);
+		FLc.setSetpoint(2.4);
+		FLc.enable();
+		BRc = new PIDController(SteerP,SteerI,SteerD,BReFake,BRa);
+		BRc.disable();
+		BRc.setContinuous(true);
+		BRc.setInputRange(0,SteerEncMax);
+		BRc.setOutputRange(-SteerSpeed,SteerSpeed);
+		BRc.setPercentTolerance(SteerTolerance);
+		BRc.setSetpoint(2.4);
+		BRc.enable();
+		BLc = new PIDController(SteerP,SteerI,SteerD,BLeFake,BLa);
+		BLc.disable();
+		BLc.setContinuous(true);
+		BLc.setInputRange(0,SteerEncMax);
+		BLc.setOutputRange(-SteerSpeed,SteerSpeed);
+		BLc.setPercentTolerance(SteerTolerance);
+		BLc.setSetpoint(2.4);
+		BLc.enable();
 
 		length = Config.GetSetting("FrameLength",1);
 		width = Config.GetSetting("FrameWidth",1);
@@ -106,6 +164,9 @@ public class SwerveDrive
 		if(wa3 < 0){wa3 += 360;}//wa3 = BR
 		if(wa4 < 0){wa4 += 360;}//wa4 = BL
 		FReFake.pidSet(FRe.pidGet());
+		FLeFake.pidSet(FLe.pidGet());
+		BReFake.pidSet(BRe.pidGet());
+		BLeFake.pidSet(BLe.pidGet());
 		FRc.setSetpoint(wa2*(SteerEncMax/360.0f));
 		
 		
