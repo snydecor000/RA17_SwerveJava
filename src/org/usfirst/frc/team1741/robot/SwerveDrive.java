@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDController;
 
-public class Drive 
+public class SwerveDrive 
 {
 	private static final double PI = 3.14159265358979;
 	private CANTalon FR;
@@ -27,7 +27,7 @@ public class Drive
 	private double wa1,wa2,wa3,wa4;
 	private double max;
 	
-	Drive(CANTalon fr,CANTalon fra, AnalogInput fre)
+	SwerveDrive(CANTalon fr,CANTalon fra, AnalogInput fre)
 	{
 		SpeedP = Config.GetSetting("speedP",1);
 		SpeedI = Config.GetSetting("speedI",0);

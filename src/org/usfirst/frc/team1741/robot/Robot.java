@@ -27,7 +27,7 @@ public class Robot extends IterativeRobot {
 	BuiltInAccelerometer acceler;
 	public static Logger logger;
 	Timer timer;
-	Drive drive;
+	SwerveDrive drive;
 	Gamepad driver;
     
 	
@@ -68,7 +68,7 @@ public class Robot extends IterativeRobot {
 		
 		timer = new Timer();
 		////////////////////////////////////////////////
-		drive = new Drive(motorFR,angleFR,absEncFR);
+		drive = new SwerveDrive(motorFR,angleFR,absEncFR);
 		////////////////////////////////////////////////
 		driver = new Gamepad(0);
     }
