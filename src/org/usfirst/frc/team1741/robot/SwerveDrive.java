@@ -227,7 +227,7 @@ public class SwerveDrive
 		Robot.logger.Log("FRspeed", FR.getSpeed());
 		Robot.logger.Log("FRApos", FRa.getEncPosition());
 		Robot.logger.Log("FRACurrent", FRa.getOutputCurrent());
-		Robot.logger.Log("FREncpos", FRe.getVoltage());
+		Robot.logger.Log("FREncpos", FRe.getVoltage() + FReFake.m_offset);
 		Robot.logger.Log("FREncSetpoint", FRc.getSetpoint());
 		
 		Robot.logger.Log("FLpos", FL.getEncPosition());
@@ -235,7 +235,7 @@ public class SwerveDrive
 		Robot.logger.Log("FLspeed", FL.getSpeed());
 		Robot.logger.Log("FLApos", FLa.getEncPosition());
 		Robot.logger.Log("FLACurrent", FLa.getOutputCurrent());
-		Robot.logger.Log("FLEncpos", FLe.getVoltage());
+		Robot.logger.Log("FLEncpos", FLe.getVoltage() + FLeFake.m_offset);
 		Robot.logger.Log("FLEncSetpoint", FLc.getSetpoint());
 		
 		Robot.logger.Log("BRpos", BR.getEncPosition());
@@ -243,7 +243,7 @@ public class SwerveDrive
 		Robot.logger.Log("BRspeed", BR.getSpeed());
 		Robot.logger.Log("BRApos", BRa.getEncPosition());
 		Robot.logger.Log("BRACurrent", BRa.getOutputCurrent());
-		Robot.logger.Log("BREncpos", BRe.getVoltage());
+		Robot.logger.Log("BREncpos", BRe.getVoltage() + BReFake.m_offset);
 		Robot.logger.Log("BREncSetpoint", BRc.getSetpoint());
 		
 		Robot.logger.Log("BLpos", BL.getEncPosition());
@@ -251,7 +251,7 @@ public class SwerveDrive
 		Robot.logger.Log("BLspeed", BL.getSpeed());
 		Robot.logger.Log("BLApos", BLa.getEncPosition());
 		Robot.logger.Log("BLACurrent", BLa.getOutputCurrent());
-		Robot.logger.Log("BLEncpos", BLe.getVoltage());
+		Robot.logger.Log("BLEncpos", BLe.getVoltage() + BLeFake.m_offset);
 		Robot.logger.Log("BLEncSetpoint", BLc.getSetpoint());
 	}
 

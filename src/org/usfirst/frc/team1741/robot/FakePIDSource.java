@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.PIDSourceType;
 public class FakePIDSource implements PIDSource
 {
 	private double m_value;
-	private double m_offset;
+	protected double m_offset;
 	private double m_min;
 	private double m_max;
 	private double m_diff;
