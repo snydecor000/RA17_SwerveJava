@@ -24,6 +24,12 @@ public class Robot extends IterativeRobot {
 	Timer timer;
 	SwerveDrive drive;
 	Gamepad driver;
+	EdgeDetect driveMode;
+	
+	double x;
+	double y;
+	double twist;
+	boolean fieldOrient;
     
 	
     public Robot()
@@ -35,6 +41,11 @@ public class Robot extends IterativeRobot {
 		timer = null;
 		drive = null;
 		driver = null;
+		driveMode = null;
+		x = 0;
+		y = 0;
+		twist = 0;
+		fieldOrient = true;
     }
 
     public void robotInit() 
@@ -59,9 +70,11 @@ public class Robot extends IterativeRobot {
 		drive = new SwerveDrive(1, 2, 0, 3, 4, 1, 5, 6, 2, 7, 8, 3);
 		////////////////////////////////////////////////
 		driver = new Gamepad(0);
+		////////////////////////////////////////////////
+		driveMode = new EdgeDetect();
     }
-    
-    public void autonomousInit() 
+
+	public void autonomousInit() 
     {
     	autoSelected = (String) chooser.getSelected();
 //		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
@@ -93,18 +106,32 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() 
     {
     	System.out.println(gyro.getAngle());
-    	drive.Swerve(driver.GetRightX(),driver.GetRightY(),driver.GetLeftX(),gyro.getAngle());
+    	
+    	x = driver.GetRightX();
+    	y = driver.GetRightY();
+    	twist = driver.GetLeftX();
+    	
+    	if(x >= -0.1 && x <= 0.1){x=0;}
+    	if(y >= -0.1 && y <= 0.1){y=0;}
+    	if(twist >= -0.1 && twist <= 0.1){twist=0;}
+    	if(driveMode.Check(driver.GetStart()))
+    	{
+    		fieldOrient = !fieldOrient;
+    	}
+    	
+    	drive.Swerve(x,y,twist,gyro.getAngle(),fieldOrient);
+    	
     	Log(timer.get());
     }
     
     public void testInit() 
     {
-    
+    	
     }
     
     public void testPeriodic() 
     {
-    
+    	
     }
     
     public void disabledInit() 
@@ -161,5 +188,3 @@ public class Robot extends IterativeRobot {
 		drive.ReloadConfig();
 	}
 }
-
-//This is a test commit for the gui

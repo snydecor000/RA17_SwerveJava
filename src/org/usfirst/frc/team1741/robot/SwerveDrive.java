@@ -135,14 +135,17 @@ public class SwerveDrive
 		max = 0.0;
 	}
 	
-	void Swerve(double x, double y, double z, double gyro)
+	void Swerve(double x, double y, double z, double gyro, boolean fieldOrient)
 	{
 		gyro *= PI/180.0f;
 		z *= TurningSpeedFactor;
-
-		temp = y * Math.cos(gyro) + x * Math.sin(gyro);
-		x = -y * Math.sin(gyro) + x * Math.cos(gyro);
-		y = temp;
+		
+		if(fieldOrient)
+		{
+			temp = y * Math.cos(gyro) + x * Math.sin(gyro);
+			x = -y * Math.sin(gyro) + x * Math.cos(gyro);
+			y = temp;
+		}
 
 		a = x - z * (length/diameter);
 		b = x + z * (length/diameter);
