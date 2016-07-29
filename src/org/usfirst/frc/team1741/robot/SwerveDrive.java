@@ -95,7 +95,7 @@ public class SwerveDrive
 		if(ws3 > max){max = ws3;}
 		if(ws4 > max){max = ws4;}
 		if(max > 1){ws1 /= max;ws2 /= max;ws3 /= max;ws4 /= max;}
-		FR.set(ws1);
+		FR.set(ws4);
 
 		wa1 = Math.atan2(b,c) * 180.0f/PI;
 		wa2 = Math.atan2(b,d) * 180.0f/PI;
@@ -106,7 +106,7 @@ public class SwerveDrive
 		if(wa3 < 0){wa3 += 360;}//wa3 = BR
 		if(wa4 < 0){wa4 += 360;}//wa4 = BL
 		FReFake.pidSet(FRe.pidGet());
-		FRc.setSetpoint(wa2*(SteerEncMax/360.0f));
+		FRc.setSetpoint(wa4*(SteerEncMax/360.0f));
 		
 		
 		System.out.println("Actual: " + FRe.getVoltage());

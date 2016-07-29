@@ -105,18 +105,26 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() 
     {
     	System.out.println(gyro.getAngle());
-    	drive.Swerve(driver.GetRightX(),driver.GetRightY(),driver.GetLeftX(),gyro.getAngle());
+    	drive.Swerve(driver.GetRightX(),-(driver.GetRightY()),driver.GetLeftX(),gyro.getAngle());
     	Log(timer.get());
     }
     
     public void testInit() 
     {
-    
+    	StartLogging("test",logger);
+    	SetupLogging();
+    	ReloadConfig();
+    	timer.reset();
+    	timer.start();
     }
     
     public void testPeriodic() 
     {
-    
+    	drive.Swerve(0,0.1,0,0);
+    	if(driver.GetStart())
+    	{
+    		ReloadConfig();
+    	}
     }
     
     public void disabledInit() 
