@@ -5,7 +5,9 @@ import java.io.File;
 import java.util.Calendar;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -25,6 +27,19 @@ public class Robot extends IterativeRobot {
 	SwerveDrive drive;
 	Gamepad driver;
 	EdgeDetect driveMode;
+	
+	CANTalon FR;
+	CANTalon FRa;
+	CANTalon FL;
+	CANTalon FLa;
+	CANTalon BR;
+	CANTalon BRa;
+	CANTalon BL;
+	CANTalon BLa;
+	AnalogInput FRe;
+	AnalogInput FLe;
+	AnalogInput BRe;
+	AnalogInput BLe;
 	//EdgeDetect config;
 	
 	double x;
@@ -36,6 +51,18 @@ public class Robot extends IterativeRobot {
 	
     public Robot()
     {
+    	FRe = null;
+    	FLe = null;
+    	BRe = null;
+    	BLe = null;
+    	 FR = null;
+    	 FRa = null;
+    	 FL = null;
+    	 FLa = null;
+    	 BR = null;
+    	 BRa = null;
+    	 BL = null;
+    	 BLa = null;
     	System.out.println("test0s");
     	chooser = null;
 		gyro = null;
@@ -62,10 +89,10 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("Auto choices", chooser);
         System.out.println("test1");
 		////////////////////////////////////////////////
-		gyro = new AnalogGyro(3);
-		gyro.setSensitivity(0.007);
-		gyro.reset();
-		gyro.calibrate();
+//		gyro = new AnalogGyro(3);
+//		gyro.setSensitivity(0.007);
+//		gyro.reset();
+//		gyro.calibrate();
 		acceler = new BuiltInAccelerometer();
 		System.out.println("test2");
 		////////////////////////////////////////////////
@@ -74,10 +101,22 @@ public class Robot extends IterativeRobot {
 		timer = new Timer();
 		System.out.println("test3");
 		////////////////////////////////////////////////
-		drive = new SwerveDrive(1, 2, 0, 3, 4, 1, 5, 6, 2, 7, 8, 4);
+		FRe = new AnalogInput(0);
+		FLe = new AnalogInput(1);
+		BRe = new AnalogInput(2);
+		BLe = new AnalogInput(4);
+	   	 FR = new CANTalon(1);
+    	 FRa = new CANTalon(2);
+    	 FL = new CANTalon(3);
+    	 FLa = new CANTalon(4);
+    	 BR = new CANTalon(5);
+    	 BRa = new CANTalon(6);
+    	 BL = new CANTalon(7);
+    	 BLa = new CANTalon(8);
+		drive = new SwerveDrive(FR, FRa, FRe, FL, FLa, FLe, BR, BRa, BRe, BL, BLa, BLe);
 		System.out.println("test4");
 		////////////////////////////////////////////////
-		driver = new Gamepad(0);
+		driver = new Gamepad(4);
 		System.out.println("test5");
 		////////////////////////////////////////////////
 		driveMode = new EdgeDetect();
@@ -116,7 +155,7 @@ public class Robot extends IterativeRobot {
     
     public void teleopPeriodic() 
     {
-    	System.out.println(gyro.getAngle());
+    	//System.out.println(gyro.getAngle());
     	
     	x = driver.GetRightX();
     	y = driver.GetRightY();
@@ -130,7 +169,8 @@ public class Robot extends IterativeRobot {
 //    		fieldOrient = !fieldOrient;
 //    	}
     	
-    	drive.Swerve(x,y,twist,gyro.getAngle(),true);
+    	//drive.Swerve(x,y,twist,gyro.getAngle(),true);
+    	drive.Swerve(x,y,twist,0,true);
     	
     	Log(timer.get());
     }

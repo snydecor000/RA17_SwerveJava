@@ -43,7 +43,7 @@ public class SwerveDrive
 	private double max;
 	
 	//SwerveDrive(CANTalon fr,CANTalon fra, AnalogInput fre)
-	SwerveDrive(int fr, int fra, int fre, int fl, int fla, int fle, int br, int bra, int bre, int bl, int bla, int ble)
+	SwerveDrive(CANTalon fr, CANTalon fra, AnalogInput fre, CANTalon fl, CANTalon fla, AnalogInput fle, CANTalon br, CANTalon bra, AnalogInput bre, CANTalon bl, CANTalon bla, AnalogInput ble)
 	{
 		SpeedP = Config.GetSetting("speedP",1);
 		SpeedI = Config.GetSetting("speedI",0);
@@ -61,28 +61,28 @@ public class SwerveDrive
 		SteerOffsetBR = Config.GetSetting("SteerEncOffsetBR",0);
 		SteerOffsetBL = Config.GetSetting("SteerEncOffsetBL",0);
 
-		FR = new CANTalon(fr);
+		FR = fr;
 		FR.setControlMode(0);
-		FL = new CANTalon(fl);
+		FL = fl;
 		FL.setControlMode(0);
-		BR = new CANTalon(br);
+		BR = br;
 		BR.setControlMode(0);
-		BL = new CANTalon(bl);
+		BL = bl;
 		BL.setControlMode(0);
 
-		FRa = new CANTalon(fra);
+		FRa = fra;
 		FRa.setControlMode(0);
-		FLa = new CANTalon(fla);
+		FLa = fla;
 		FLa.setControlMode(0);
-		BRa = new CANTalon(bra);
+		BRa = bra;
 		BRa.setControlMode(0);
-		BLa = new CANTalon(bla);
+		BLa = bla;
 		BLa.setControlMode(0);
 
-		FRe = new AnalogInput(fre);
-		FLe = new AnalogInput(fle);
-		BRe = new AnalogInput(bre);
-		BLe = new AnalogInput(ble);
+		FRe = fre;
+		FLe = fle;
+		BRe = bre;
+		BLe = ble;
 		
 		FReFake = new FakePIDSource(SteerOffsetFR,0,SteerEncMax);
 		FLeFake = new FakePIDSource(SteerOffsetFL,0,SteerEncMax);
