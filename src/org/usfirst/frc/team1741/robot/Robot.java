@@ -25,15 +25,18 @@ public class Robot extends IterativeRobot {
 	SwerveDrive drive;
 	Gamepad driver;
 	EdgeDetect driveMode;
+	//EdgeDetect config;
 	
 	double x;
 	double y;
 	double twist;
 	boolean fieldOrient;
+	boolean configReload;
     
 	
     public Robot()
     {
+    	System.out.println("test0s");
     	chooser = null;
 		gyro = null;
 		acceler = null;
@@ -46,32 +49,40 @@ public class Robot extends IterativeRobot {
 		y = 0;
 		twist = 0;
 		fieldOrient = true;
+		//config = null;
     }
 
     public void robotInit() 
     {
+    	System.out.println("test");
     	Config.LoadFromFile("/home/lvuser/config.txt");
     	chooser = new SendableChooser();
         chooser.addDefault("Default Auto", defaultAuto);
         chooser.addObject("My Auto", customAuto);
         SmartDashboard.putData("Auto choices", chooser);
-        
+        System.out.println("test1");
 		////////////////////////////////////////////////
-		gyro = new AnalogGyro(1);
+		gyro = new AnalogGyro(3);
 		gyro.setSensitivity(0.007);
 		gyro.reset();
 		gyro.calibrate();
 		acceler = new BuiltInAccelerometer();
+		System.out.println("test2");
 		////////////////////////////////////////////////
 		logger = new Logger();
 		
 		timer = new Timer();
+		System.out.println("test3");
 		////////////////////////////////////////////////
-		drive = new SwerveDrive(1, 2, 0, 3, 4, 1, 5, 6, 2, 7, 8, 3);
+		drive = new SwerveDrive(1, 2, 0, 3, 4, 1, 5, 6, 2, 7, 8, 4);
+		System.out.println("test4");
 		////////////////////////////////////////////////
 		driver = new Gamepad(0);
+		System.out.println("test5");
 		////////////////////////////////////////////////
 		driveMode = new EdgeDetect();
+		//config = new EdgeDetect();
+		System.out.println("test6");
     }
 
 	public void autonomousInit() 
@@ -114,24 +125,33 @@ public class Robot extends IterativeRobot {
     	if(x >= -0.1 && x <= 0.1){x=0;}
     	if(y >= -0.1 && y <= 0.1){y=0;}
     	if(twist >= -0.1 && twist <= 0.1){twist=0;}
-    	if(driveMode.Check(driver.GetStart()))
-    	{
-    		fieldOrient = !fieldOrient;
-    	}
+//    	if(driveMode.Check(driver.GetStart()))
+//    	{
+//    		fieldOrient = !fieldOrient;
+//    	}
     	
-    	drive.Swerve(x,y,twist,gyro.getAngle(),fieldOrient);
+    	drive.Swerve(x,y,twist,gyro.getAngle(),true);
     	
     	Log(timer.get());
     }
     
     public void testInit() 
     {
-    	
+    	StartLogging("test",logger);
+    	SetupLogging();
+    	ReloadConfig();
+    	timer.reset();
+    	timer.start();
     }
     
     public void testPeriodic() 
     {
-    	
+    	drive.Swerve(0,0.1,0,0,fieldOrient);
+    	if(driver.GetBack())
+    	{
+    		//configReload = !configReload;
+    		ReloadConfig();
+    	}
     }
     
     public void disabledInit() 
