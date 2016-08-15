@@ -72,7 +72,7 @@ public class Config
 		 * Optional ' ' around an '='
 		 * Match a number, with an optional '.' and more numbers
 		 */
-		Pattern p = Pattern.compile("(#{0})[\\w\\d_]+ ?= ?\\d+(\\.\\d+)?");
+		Pattern p = Pattern.compile("(#{0})[\\w\\d_]+ ?= ?-?\\d+(\\.\\d+)?");
 		
 		while(infile.hasNextLine())
 		{

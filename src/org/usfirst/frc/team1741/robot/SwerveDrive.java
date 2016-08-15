@@ -163,9 +163,9 @@ public class SwerveDrive
 		if(ws4 > max){max = ws4;}
 		if(max > 1){ws1 /= max;ws2 /= max;ws3 /= max;ws4 /= max;}
 		FR.set(ws2);
-		FL.set(ws1);
+		FL.set(-ws1);
 		BR.set(ws3);
-		BL.set(ws4);
+		BL.set(-ws4);
 
 		wa1 = Math.atan2(b,c) * 180.0f/PI;
 		wa2 = Math.atan2(b,d) * 180.0f/PI;
