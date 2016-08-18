@@ -41,6 +41,7 @@ public class SwerveDrive
 	private double ws1,ws2,ws3,ws4;
 	private double wa1,wa2,wa3,wa4;
 	private double max;
+	private double frEnc,flEnc,brEnc,blEnc;
 	
 	//SwerveDrive(CANTalon fr,CANTalon fra, AnalogInput fre)
 	SwerveDrive(CANTalon fr, CANTalon fra, AnalogInput fre, CANTalon fl, CANTalon fla, AnalogInput fle, CANTalon br, CANTalon bra, AnalogInput bre, CANTalon bl, CANTalon bla, AnalogInput ble)
@@ -133,6 +134,7 @@ public class SwerveDrive
 		ws1 = 0.0;ws2 = 0.0;ws3 = 0.0;ws4 = 0.0;
 		wa1 = 0.0;wa2 = 0.0;wa3 = 0.0;wa4 = 0.0;
 		max = 0.0;
+		frEnc = 0;flEnc = 0;brEnc = 0;blEnc = 0;
 	}
 	
 	void Swerve(double x, double y, double z, double gyro, boolean fieldOrient)
@@ -179,6 +181,10 @@ public class SwerveDrive
 		FLeFake.pidSet(FLe.pidGet());
 		BReFake.pidSet(BRe.pidGet());
 		BLeFake.pidSet(BLe.pidGet());
+		frEnc = FReFake.pidGet();
+		flEnc = FLeFake.pidGet();
+		brEnc = BReFake.pidGet();
+		blEnc = BLeFake.pidGet();
 		FRc.setSetpoint(wa2*(SteerEncMax/360.0f));
 		FLc.setSetpoint(wa1*(SteerEncMax/360.0f));
 		BRc.setSetpoint(wa3*(SteerEncMax/360.0f));
