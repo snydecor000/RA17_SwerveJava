@@ -84,7 +84,7 @@ public class Config
 				m_settings.put(ConvertToLower(key[0]), value);
 				System.out.println(key[0] + ": " + value);
 			}
-			else if(!in.startsWith("#"))
+			else if(!in.startsWith("#") && !in.startsWith("\n"))
 			{
 				System.out.println("Could not parse line \"" + in + "\"");
 			}
