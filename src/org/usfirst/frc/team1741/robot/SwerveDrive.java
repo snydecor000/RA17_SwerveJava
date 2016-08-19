@@ -41,7 +41,8 @@ public class SwerveDrive
 	private double ws1,ws2,ws3,ws4;
 	private double wa1,wa2,wa3,wa4;
 	private double max;
-	private double frEnc,flEnc,brEnc,blEnc;
+	private double frEncPos,flEncPos,brEncPos,blEncPos;
+	private double frEncSetpoint,flEncSetpoint,brEncSetpoint,blEncSetpoint;
 	private double SteerEncMaxFR,SteerEncMaxFL,SteerEncMaxBR,SteerEncMaxBL;
 	
 	//SwerveDrive(CANTalon fr,CANTalon fra, AnalogInput fre)
@@ -144,7 +145,8 @@ public class SwerveDrive
 		ws1 = 0.0;ws2 = 0.0;ws3 = 0.0;ws4 = 0.0;
 		wa1 = 0.0;wa2 = 0.0;wa3 = 0.0;wa4 = 0.0;
 		max = 0.0;
-		frEnc = 0;flEnc = 0;brEnc = 0;blEnc = 0;
+		frEncPos = 0;flEncPos = 0;brEncPos = 0;blEncPos = 0;
+		frEncSetpoint = 0;flEncSetpoint = 0;brEncSetpoint = 0;blEncSetpoint = 0;
 	}
 	
 	void Swerve(double x, double y, double z, double gyro, boolean fieldOrient)
@@ -193,14 +195,19 @@ public class SwerveDrive
 			FLeFake.pidSet(FLe.pidGet());
 			BReFake.pidSet(BRe.pidGet());
 			BLeFake.pidSet(BLe.pidGet());
-			frEnc = FReFake.pidGet();
-			flEnc = FLeFake.pidGet();
-			brEnc = BReFake.pidGet();
-			blEnc = BLeFake.pidGet();
-			FRc.setSetpoint(wa2*(SteerEncMaxFR/360.0f));
-			FLc.setSetpoint(wa1*(SteerEncMaxFL/360.0f));
-			BRc.setSetpoint(wa3*(SteerEncMaxBR/360.0f));
-			BLc.setSetpoint(wa4*(SteerEncMaxBL/360.0f));
+			frEncPos = FReFake.pidGet();
+			flEncPos = FLeFake.pidGet();
+			brEncPos = BReFake.pidGet();
+			blEncPos = BLeFake.pidGet();
+			frEncSetpoint = (wa2*(SteerEncMaxFR/360.0f));
+			//if(Math.fabs(frEncSetpoint-frEncPos)>=90)
+			flEncSetpoint = (wa1*(SteerEncMaxFL/360.0f));
+			brEncSetpoint = (wa3*(SteerEncMaxBR/360.0f));
+			blEncSetpoint = (wa4*(SteerEncMaxBL/360.0f));
+			FRc.setSetpoint(frEncSetpoint);
+			FLc.setSetpoint(flEncSetpoint);
+			BRc.setSetpoint(brEncSetpoint);
+			BLc.setSetpoint(blEncSetpoint);
 		}
 		else
 		{
@@ -212,10 +219,10 @@ public class SwerveDrive
 			FLeFake.pidSet(FLe.pidGet());
 			BReFake.pidSet(BRe.pidGet());
 			BLeFake.pidSet(BLe.pidGet());
-			frEnc = FReFake.pidGet();
-			flEnc = FLeFake.pidGet();
-			brEnc = BReFake.pidGet();
-			blEnc = BLeFake.pidGet();
+			frEncPos = FReFake.pidGet();
+			flEncPos = FLeFake.pidGet();
+			brEncPos = BReFake.pidGet();
+			blEncPos = BLeFake.pidGet();
 			FRc.setSetpoint(FRc.getSetpoint());
 			FLc.setSetpoint(FLc.getSetpoint());
 			BRc.setSetpoint(BRc.getSetpoint());
