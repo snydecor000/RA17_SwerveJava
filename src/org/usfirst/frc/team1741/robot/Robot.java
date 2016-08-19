@@ -8,8 +8,10 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -89,10 +91,10 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("Auto choices", chooser);
         System.out.println("test1");
 		////////////////////////////////////////////////
-//		gyro = new AnalogGyro(3);
-//		gyro.setSensitivity(0.007);
-//		gyro.reset();
-//		gyro.calibrate();
+		gyro = new AnalogGyro(1);
+		gyro.setSensitivity(0.007);
+		gyro.reset();
+		gyro.calibrate();
 		acceler = new BuiltInAccelerometer();
 		System.out.println("test2");
 		////////////////////////////////////////////////
@@ -102,7 +104,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("test3");
 		////////////////////////////////////////////////
 		FRe = new AnalogInput(0);
-		FLe = new AnalogInput(1);
+		FLe = new AnalogInput(3);
 		BRe = new AnalogInput(2);
 		BLe = new AnalogInput(4);
 	   	FR = new CANTalon(1);
@@ -155,7 +157,7 @@ public class Robot extends IterativeRobot {
     
     public void teleopPeriodic() 
     {
-    	//System.out.println(gyro.getAngle());
+    	System.out.println(gyro.getAngle());
     	
     	x = driver.GetLeftX();
     	y = driver.GetLeftY();
@@ -166,13 +168,15 @@ public class Robot extends IterativeRobot {
     	if(y >= -0.1 && y <= 0.1){y=0;}
     	else { y=0.6*y; }
     	if(twist >= -0.1 && twist <= 0.1){twist=0;}
-//    	if(driveMode.Check(driver.GetStart()))
-//    	{
-//    		fieldOrient = !fieldOrient;
-//    	}
+    	else { twist=0.6*twist; }
+    	if(driveMode.Check(driver.GetStart()))
+    	{
+    		gyro.reset();
+    		fieldOrient = !fieldOrient;
+    	}
     	
-    	//drive.Swerve(x,y,twist,gyro.getAngle(),true);
-    	drive.Swerve(-x,-y,-twist,0,true);
+    	drive.Swerve(-x,-y,-twist,-gyro.getAngle(),fieldOrient);
+    	//drive.Swerve(-x,-y,-twist,0,true);
        	if(driver.GetBack())
     	{
     		//configReload = !configReload;

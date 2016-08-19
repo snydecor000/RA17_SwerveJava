@@ -42,6 +42,7 @@ public class SwerveDrive
 	private double wa1,wa2,wa3,wa4;
 	private double max;
 	private double frEnc,flEnc,brEnc,blEnc;
+	private double SteerEncMaxFR,SteerEncMaxFL,SteerEncMaxBR,SteerEncMaxBL;
 	
 	//SwerveDrive(CANTalon fr,CANTalon fra, AnalogInput fre)
 	SwerveDrive(CANTalon fr, CANTalon fra, AnalogInput fre, CANTalon fl, CANTalon fla, AnalogInput fle, CANTalon br, CANTalon bra, AnalogInput bre, CANTalon bl, CANTalon bla, AnalogInput ble)
@@ -64,12 +65,16 @@ public class SwerveDrive
 
 		FR = fr;
 		FR.setControlMode(0);
+		FR.enableBrakeMode(true);
 		FL = fl;
 		FL.setControlMode(0);
+		FL.enableBrakeMode(true);
 		BR = br;
 		BR.setControlMode(0);
+		BR.enableBrakeMode(true);
 		BL = bl;
 		BL.setControlMode(0);
+		BL.enableBrakeMode(true);
 
 		FRa = fra;
 		FRa.setControlMode(0);
@@ -85,10 +90,15 @@ public class SwerveDrive
 		BRe = bre;
 		BLe = ble;
 		
-		FReFake = new FakePIDSource(SteerOffsetFR,0,SteerEncMax);
-		FLeFake = new FakePIDSource(SteerOffsetFL,0,SteerEncMax);
-		BReFake = new FakePIDSource(SteerOffsetBR,0,SteerEncMax);
-		BLeFake = new FakePIDSource(SteerOffsetBL,0,SteerEncMax);
+		SteerEncMaxFR = Config.GetSetting("SteerEncMaxFR",0);
+		SteerEncMaxFL = Config.GetSetting("SteerEncMaxFL",0);
+		SteerEncMaxBR = Config.GetSetting("SteerEncMaxBR",0);
+		SteerEncMaxBL = Config.GetSetting("SteerEncMaxBL",0);
+		
+		FReFake = new FakePIDSource(SteerOffsetFR,0,SteerEncMaxFR);
+		FLeFake = new FakePIDSource(SteerOffsetFL,0,SteerEncMaxFL);
+		BReFake = new FakePIDSource(SteerOffsetBR,0,SteerEncMaxBR);
+		BLeFake = new FakePIDSource(SteerOffsetBL,0,SteerEncMaxBL);
 
 		FRc = new PIDController(SteerP,SteerI,SteerD,FReFake,FRa);
 		FRc.disable();
@@ -141,54 +151,76 @@ public class SwerveDrive
 	{
 		gyro *= PI/180.0f;
 		z *= TurningSpeedFactor;
-		
-		if(fieldOrient)
+		if((x!=0 || y!=0) || z!=0)
 		{
-			temp = y * Math.cos(gyro) + x * Math.sin(gyro);
-			x = -y * Math.sin(gyro) + x * Math.cos(gyro);
-			y = temp;
+			System.out.println("go");
+			if(fieldOrient)
+			{
+				temp = y * Math.cos(gyro) + x * Math.sin(gyro);
+				x = -y * Math.sin(gyro) + x * Math.cos(gyro);
+				y = temp;
+			}
+	
+			a = x - z * (length/diameter);
+			b = x + z * (length/diameter);
+			c = y - z * (width/diameter);
+			d = y + z * (width/diameter);
+	
+			ws1 = Math.sqrt(Math.pow(b,2) + Math.pow(c,2));
+			ws2 = Math.sqrt(Math.pow(b,2) + Math.pow(d,2));
+			ws3 = Math.sqrt(Math.pow(a,2) + Math.pow(d,2));
+			ws4 = Math.sqrt(Math.pow(a,2) + Math.pow(c,2));
+			max = 0;
+			if(ws1 > max){max = ws1;}
+			if(ws2 > max){max = ws2;}
+			if(ws3 > max){max = ws3;}
+			if(ws4 > max){max = ws4;}
+			if(max > 1){ws1 /= max;ws2 /= max;ws3 /= max;ws4 /= max;}
+			FR.set(ws2);
+			FL.set(-ws1);
+			BR.set(ws3);
+			BL.set(-ws4);
+	
+			wa1 = Math.atan2(b,c) * 180.0f/PI;
+			wa2 = Math.atan2(b,d) * 180.0f/PI;
+			wa3 = Math.atan2(a,d) * 180.0f/PI;
+			wa4 = Math.atan2(a,c) * 180.0f/PI;
+			if(wa1 < 0){wa1 += 360;}//wa1 = FL
+			if(wa2 < 0){wa2 += 360;}//wa2 = FR
+			if(wa3 < 0){wa3 += 360;}//wa3 = BR
+			if(wa4 < 0){wa4 += 360;}//wa4 = BL
+			FReFake.pidSet(FRe.pidGet());
+			FLeFake.pidSet(FLe.pidGet());
+			BReFake.pidSet(BRe.pidGet());
+			BLeFake.pidSet(BLe.pidGet());
+			frEnc = FReFake.pidGet();
+			flEnc = FLeFake.pidGet();
+			brEnc = BReFake.pidGet();
+			blEnc = BLeFake.pidGet();
+			FRc.setSetpoint(wa2*(SteerEncMaxFR/360.0f));
+			FLc.setSetpoint(wa1*(SteerEncMaxFL/360.0f));
+			BRc.setSetpoint(wa3*(SteerEncMaxBR/360.0f));
+			BLc.setSetpoint(wa4*(SteerEncMaxBL/360.0f));
 		}
-
-		a = x - z * (length/diameter);
-		b = x + z * (length/diameter);
-		c = y - z * (width/diameter);
-		d = y + z * (width/diameter);
-
-		ws1 = Math.sqrt(Math.pow(b,2) + Math.pow(c,2));
-		ws2 = Math.sqrt(Math.pow(b,2) + Math.pow(d,2));
-		ws3 = Math.sqrt(Math.pow(a,2) + Math.pow(d,2));
-		ws4 = Math.sqrt(Math.pow(a,2) + Math.pow(c,2));
-		max = 0;
-		if(ws1 > max){max = ws1;}
-		if(ws2 > max){max = ws2;}
-		if(ws3 > max){max = ws3;}
-		if(ws4 > max){max = ws4;}
-		if(max > 1){ws1 /= max;ws2 /= max;ws3 /= max;ws4 /= max;}
-		FR.set(ws2);
-		FL.set(-ws1);
-		BR.set(ws3);
-		BL.set(-ws4);
-
-		wa1 = Math.atan2(b,c) * 180.0f/PI;
-		wa2 = Math.atan2(b,d) * 180.0f/PI;
-		wa3 = Math.atan2(a,d) * 180.0f/PI;
-		wa4 = Math.atan2(a,c) * 180.0f/PI;
-		if(wa1 < 0){wa1 += 360;}//wa1 = FL
-		if(wa2 < 0){wa2 += 360;}//wa2 = FR
-		if(wa3 < 0){wa3 += 360;}//wa3 = BR
-		if(wa4 < 0){wa4 += 360;}//wa4 = BL
-		FReFake.pidSet(FRe.pidGet());
-		FLeFake.pidSet(FLe.pidGet());
-		BReFake.pidSet(BRe.pidGet());
-		BLeFake.pidSet(BLe.pidGet());
-		frEnc = FReFake.pidGet();
-		flEnc = FLeFake.pidGet();
-		brEnc = BReFake.pidGet();
-		blEnc = BLeFake.pidGet();
-		FRc.setSetpoint(wa2*(SteerEncMax/360.0f));
-		FLc.setSetpoint(wa1*(SteerEncMax/360.0f));
-		BRc.setSetpoint(wa3*(SteerEncMax/360.0f));
-		BLc.setSetpoint(wa4*(SteerEncMax/360.0f));
+		else
+		{
+			FR.set(0);
+			FL.set(0);
+			BR.set(0);
+			BL.set(0);
+			FReFake.pidSet(FRe.pidGet());
+			FLeFake.pidSet(FLe.pidGet());
+			BReFake.pidSet(BRe.pidGet());
+			BLeFake.pidSet(BLe.pidGet());
+			frEnc = FReFake.pidGet();
+			flEnc = FLeFake.pidGet();
+			brEnc = BReFake.pidGet();
+			blEnc = BLeFake.pidGet();
+			FRc.setSetpoint(FRc.getSetpoint());
+			FLc.setSetpoint(FLc.getSetpoint());
+			BRc.setSetpoint(BRc.getSetpoint());
+			BLc.setSetpoint(BLc.getSetpoint());
+		}
 		
 		System.out.println("Actual: " + FRe.getVoltage());
 		System.out.println("Setpoint: " + FRc.getSetpoint());
@@ -260,7 +292,7 @@ public class SwerveDrive
 		Robot.logger.Log("BLspeed", BL.getSpeed());
 		Robot.logger.Log("BLApos", BLa.getEncPosition());
 		Robot.logger.Log("BLACurrent", BLa.getOutputCurrent());
-		Robot.logger.Log("BLEncpos", BLe.getVoltage() + BLeFake.m_offset);
+		Robot.logger.Log("BLEncpos", BLe.getVoltage() - BLeFake.m_offset);
 		Robot.logger.Log("BLEncSetpoint", BLc.getSetpoint());
 	}
 
@@ -282,30 +314,35 @@ public class SwerveDrive
 		SteerTolerance = Config.GetSetting("Steering%Tolerance", 0.25);
 		SteerSpeed = Config.GetSetting("SteerSpeed", 1);
 		SteerEncMax = Config.GetSetting("SteerEncMax",4.792);
+		
+		SteerEncMaxFR = Config.GetSetting("SteerEncMaxFR",0);
+		SteerEncMaxFL = Config.GetSetting("SteerEncMaxFL",0);
+		SteerEncMaxBR = Config.GetSetting("SteerEncMaxBR",0);
+		SteerEncMaxBL = Config.GetSetting("SteerEncMaxBL",0);
 
-		FRc.setInputRange(0,SteerEncMax);
+		FRc.setInputRange(0,SteerEncMaxFR);
 		FRc.setOutputRange(-SteerSpeed,SteerSpeed);
 		FRc.setPercentTolerance(SteerTolerance);
 		
-		FLc.setInputRange(0,SteerEncMax);
+		FLc.setInputRange(0,SteerEncMaxFL);
 		FLc.setOutputRange(-SteerSpeed,SteerSpeed);
 		FLc.setPercentTolerance(SteerTolerance);
 		
-		BRc.setInputRange(0,SteerEncMax);
+		BRc.setInputRange(0,SteerEncMaxBR);
 		BRc.setOutputRange(-SteerSpeed,SteerSpeed);
 		BRc.setPercentTolerance(SteerTolerance);
 		
-		BLc.setInputRange(0,SteerEncMax);
+		BLc.setInputRange(0,SteerEncMaxBL);
 		BLc.setOutputRange(-SteerSpeed,SteerSpeed);
 		BLc.setPercentTolerance(SteerTolerance);
 	/////////////////////////////////////////////////////
 		TurningSpeedFactor = Config.GetSetting("turningSpeedFactor", 1);
 		DriveCIMMaxRPM = Config.GetSetting("driveCIMmaxRPM",4000);
 	/////////////////////////////////////////////////////
-		SteerOffsetFR = Config.GetSetting("SteerEncOffsetFR",0);
-		SteerOffsetFL = Config.GetSetting("SteerEncOffsetFL",0);
-		SteerOffsetBR = Config.GetSetting("SteerEncOffsetBR",0);
-		SteerOffsetBL = Config.GetSetting("SteerEncOffsetBL",0);
+		SteerOffsetFR = Config.GetSetting("SteerEncOffsetFR",4.92);
+		SteerOffsetFL = Config.GetSetting("SteerEncOffsetFL",4.92);
+		SteerOffsetBR = Config.GetSetting("SteerEncOffsetBR",4.92);
+		SteerOffsetBL = Config.GetSetting("SteerEncOffsetBL",4.92);
 
 		FReFake.setOffset(SteerOffsetFR);
 		FLeFake.setOffset(SteerOffsetFL);
