@@ -44,6 +44,8 @@ public class SwerveDrive
 	private double max;
 	@SuppressWarnings("unused")
 	private double frEnc,flEnc,brEnc,blEnc;
+	private double frEncPos,flEncPos,brEncPos,blEncPos;
+	private double frEncSetpoint,flEncSetpoint,brEncSetpoint,blEncSetpoint;
 	private double SteerEncMaxFR,SteerEncMaxFL,SteerEncMaxBR,SteerEncMaxBL;
 	
 	//SwerveDrive(CANTalon fr,CANTalon fra, AnalogInput fre)
@@ -146,7 +148,8 @@ public class SwerveDrive
 		ws1 = 0.0;ws2 = 0.0;ws3 = 0.0;ws4 = 0.0;
 		wa1 = 0.0;wa2 = 0.0;wa3 = 0.0;wa4 = 0.0;
 		max = 0.0;
-		frEnc = 0;flEnc = 0;brEnc = 0;blEnc = 0;
+		frEncPos = 0;flEncPos = 0;brEncPos = 0;blEncPos = 0;
+		frEncSetpoint = 0;flEncSetpoint = 0;brEncSetpoint = 0;blEncSetpoint = 0;
 	}
 	
 	void Swerve(double x, double y, double z, double gyro, boolean fieldOrient)
