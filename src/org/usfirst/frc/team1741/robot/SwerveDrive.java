@@ -27,6 +27,7 @@ public class SwerveDrive
 	private AnalogInput BLe;
 	private PIDController BLc;
 	private FakePIDSource BLeFake;
+	private int movecount = 0;
 
 	@SuppressWarnings("unused")
 	private double SpeedP,SpeedI,SpeedD;
@@ -41,6 +42,7 @@ public class SwerveDrive
 	private double ws1,ws2,ws3,ws4;
 	private double wa1,wa2,wa3,wa4;
 	private double max;
+	@SuppressWarnings("unused")
 	private double frEnc,flEnc,brEnc,blEnc;
 	private double SteerEncMaxFR,SteerEncMaxFL,SteerEncMaxBR,SteerEncMaxBL;
 	
@@ -153,7 +155,8 @@ public class SwerveDrive
 		z *= TurningSpeedFactor;
 		if((x!=0 || y!=0) || z!=0)
 		{
-			System.out.println("go");
+			movecount = 100;
+			//System.out.println("go");
 			if(fieldOrient)
 			{
 				temp = y * Math.cos(gyro) + x * Math.sin(gyro);
@@ -176,10 +179,7 @@ public class SwerveDrive
 			if(ws3 > max){max = ws3;}
 			if(ws4 > max){max = ws4;}
 			if(max > 1){ws1 /= max;ws2 /= max;ws3 /= max;ws4 /= max;}
-			FR.set(ws2);
-			FL.set(-ws1);
-			BR.set(ws3);
-			BL.set(-ws4);
+
 	
 			wa1 = Math.atan2(b,c) * 180.0f/PI;
 			wa2 = Math.atan2(b,d) * 180.0f/PI;
@@ -189,6 +189,8 @@ public class SwerveDrive
 			if(wa2 < 0){wa2 += 360;}//wa2 = FR
 			if(wa3 < 0){wa3 += 360;}//wa3 = BR
 			if(wa4 < 0){wa4 += 360;}//wa4 = BL
+			
+			//System.out.println(wa1 + " " + wa2 + " " + wa3 + " " + wa4);
 			FReFake.pidSet(FRe.pidGet());
 			FLeFake.pidSet(FLe.pidGet());
 			BReFake.pidSet(BRe.pidGet());
@@ -197,6 +199,32 @@ public class SwerveDrive
 			flEnc = FLeFake.pidGet();
 			brEnc = BReFake.pidGet();
 			blEnc = BLeFake.pidGet();
+			//System.out.println(wa2 + " " + (FReFake.pidGet()/(SteerEncMaxFR/360.0f)));
+			if(Math.abs(FReFake.pidGet()/(SteerEncMaxFR/360.0f) - wa2) > 90)
+			{
+				//System.out.println("switch " + Math.abs(FReFake.pidGet()/(SteerEncMaxFR/360.0f) - wa2));
+				wa2 = (wa2 + 180)%360;
+				ws2 = -ws2;
+			}
+			if(Math.abs(FLeFake.pidGet()/(SteerEncMaxFL/360.0f) - wa1) > 90)
+			{
+				wa1 = (wa1 + 180)%360;
+				ws1 = -ws1;
+			}
+			if(Math.abs(BReFake.pidGet()/(SteerEncMaxBR/360.0f) - wa3) > 90)
+			{
+				wa3 = (wa3 + 180)%360;
+				ws3 = -ws3;
+			}
+			if(Math.abs(BLeFake.pidGet()/(SteerEncMaxBL/360.0f) - wa4) > 90)
+			{
+				wa4 = (wa4 + 180)%360;
+				ws4 = -ws4;
+			}
+			FR.set(ws2);
+			FL.set(-ws1);
+			BR.set(ws3);
+			BL.set(-ws4);
 			FRc.setSetpoint(wa2*(SteerEncMaxFR/360.0f));
 			FLc.setSetpoint(wa1*(SteerEncMaxFL/360.0f));
 			BRc.setSetpoint(wa3*(SteerEncMaxBR/360.0f));
@@ -204,26 +232,74 @@ public class SwerveDrive
 		}
 		else
 		{
-			FR.set(0);
-			FL.set(0);
-			BR.set(0);
-			BL.set(0);
-			FReFake.pidSet(FRe.pidGet());
-			FLeFake.pidSet(FLe.pidGet());
-			BReFake.pidSet(BRe.pidGet());
-			BLeFake.pidSet(BLe.pidGet());
-			frEnc = FReFake.pidGet();
-			flEnc = FLeFake.pidGet();
-			brEnc = BReFake.pidGet();
-			blEnc = BLeFake.pidGet();
-			FRc.setSetpoint(FRc.getSetpoint());
-			FLc.setSetpoint(FLc.getSetpoint());
-			BRc.setSetpoint(BRc.getSetpoint());
-			BLc.setSetpoint(BLc.getSetpoint());
+			movecount--;
+			System.out.println(movecount);
+			if(movecount < 0)
+			{
+				a = 0 - 0 * (length/diameter);
+				b = 0 + 0 * (length/diameter);
+				c = 0 - 0 * (width/diameter);
+				d = 0 + 0 * (width/diameter);
+		
+				ws1 = Math.sqrt(Math.pow(b,2) + Math.pow(c,2));
+				ws2 = Math.sqrt(Math.pow(b,2) + Math.pow(d,2));
+				ws3 = Math.sqrt(Math.pow(a,2) + Math.pow(d,2));
+				ws4 = Math.sqrt(Math.pow(a,2) + Math.pow(c,2));
+				max = 0;
+				if(ws1 > max){max = ws1;}
+				if(ws2 > max){max = ws2;}
+				if(ws3 > max){max = ws3;}
+				if(ws4 > max){max = ws4;}
+				if(max > 1){ws1 /= max;ws2 /= max;ws3 /= max;ws4 /= max;}
+
+				wa1 = Math.atan2(b,c) * 180.0f/PI;
+				wa2 = Math.atan2(b,d) * 180.0f/PI;
+				wa3 = Math.atan2(a,d) * 180.0f/PI;
+				wa4 = Math.atan2(a,c) * 180.0f/PI;
+				if(wa1 < 0){wa1 += 360;}//wa1 = FL
+				if(wa2 < 0){wa2 += 360;}//wa2 = FR
+				if(wa3 < 0){wa3 += 360;}//wa3 = BR
+				if(wa4 < 0){wa4 += 360;}//wa4 = BL
+				FReFake.pidSet(FRe.pidGet());
+				FLeFake.pidSet(FLe.pidGet());
+				BReFake.pidSet(BRe.pidGet());
+				BLeFake.pidSet(BLe.pidGet());
+				frEnc = FReFake.pidGet();
+				flEnc = FLeFake.pidGet();
+				brEnc = BReFake.pidGet();
+				blEnc = BLeFake.pidGet();
+				FR.set(ws2);
+				FL.set(-ws1);
+				BR.set(ws3);
+				BL.set(-ws4);
+				FRc.setSetpoint(wa2*(SteerEncMaxFR/360.0f));
+				FLc.setSetpoint(wa1*(SteerEncMaxFL/360.0f));
+				BRc.setSetpoint(wa3*(SteerEncMaxBR/360.0f));
+				BLc.setSetpoint(wa4*(SteerEncMaxBL/360.0f));
+			}
+			else
+			{
+				FR.set(0);
+				FL.set(0);
+				BR.set(0);
+				BL.set(0);
+				FReFake.pidSet(FRe.pidGet());
+				FLeFake.pidSet(FLe.pidGet());
+				BReFake.pidSet(BRe.pidGet());
+				BLeFake.pidSet(BLe.pidGet());
+				frEnc = FReFake.pidGet();
+				flEnc = FLeFake.pidGet();
+				brEnc = BReFake.pidGet();
+				blEnc = BLeFake.pidGet();
+				FRc.setSetpoint(FRc.getSetpoint());
+				FLc.setSetpoint(FLc.getSetpoint());
+				BRc.setSetpoint(BRc.getSetpoint());
+				BLc.setSetpoint(BLc.getSetpoint());
+			}
 		}
 		
-		System.out.println("Actual: " + FRe.getVoltage());
-		System.out.println("Setpoint: " + FRc.getSetpoint());
+//		System.out.println("Actual: " + FRe.getVoltage());
+//		System.out.println("Setpoint: " + FRc.getSetpoint());
 	}
 	
 	void SetupLogging(Logger logger)

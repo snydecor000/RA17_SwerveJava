@@ -8,10 +8,8 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -157,7 +155,7 @@ public class Robot extends IterativeRobot {
     
     public void teleopPeriodic() 
     {
-    	System.out.println(gyro.getAngle());
+    	//System.out.println(gyro.getAngle());
     	
     	x = driver.GetLeftX();
     	y = driver.GetLeftY();
