@@ -162,11 +162,12 @@ public class Robot extends IterativeRobot {
     	twist = driver.GetRightX();
     	
     	if(x >= -0.1 && x <= 0.1){x=0;}
-    	else { x=0.6*x; }
+    	else if(!driver.GetRightBumper()) { x=0.6*x; }
     	if(y >= -0.1 && y <= 0.1){y=0;}
-    	else { y=0.6*y; }
+    	else if(!driver.GetRightBumper()) { y=0.6*y; }
     	if(twist >= -0.1 && twist <= 0.1){twist=0;}
-    	else { twist=0.6*twist; }
+    	else if(!driver.GetRightBumper()) { twist=0.6*twist; }
+    	else { twist=0.8*twist; }
     	if(driveMode.Check(driver.GetStart()))
     	{
     		gyro.reset();
