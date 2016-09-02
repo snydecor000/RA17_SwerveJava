@@ -238,6 +238,7 @@ public class Robot extends IterativeRobot {
 		logger.AddAttribute("AccX");
 		logger.AddAttribute("AccY");
 		logger.AddAttribute("AccZ");
+		logger.AddAttribute("Gyro");
 		drive.SetupLogging(logger);
 		logger.WriteAttributes();
 	}
@@ -248,6 +249,7 @@ public class Robot extends IterativeRobot {
 		logger.Log("AccX", acceler.getX());
 		logger.Log("AccY", acceler.getY());
 		logger.Log("AccZ", acceler.getZ());
+		logger.Log("Gryo", gyro.getAngle());
 		drive.Log();
 		logger.WriteLine();
 	}
