@@ -249,7 +249,7 @@ public class Robot extends IterativeRobot {
 		logger.Log("AccX", acceler.getX());
 		logger.Log("AccY", acceler.getY());
 		logger.Log("AccZ", acceler.getZ());
-		logger.Log("Gryo", gyro.getAngle());
+		logger.Log("Gyro", gyro.getAngle());
 		drive.Log();
 		logger.WriteLine();
 	}
