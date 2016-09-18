@@ -170,8 +170,12 @@ public class Robot extends IterativeRobot {
     	else { twist=0.8*twist; }
     	if(driveMode.Check(driver.GetStart()))
     	{
-    		gyro.reset();
     		fieldOrient = !fieldOrient;
+    	}
+    	
+    	if(driver.GetRightBumper())
+    	{
+    		gyro.reset();
     	}
     	
     	drive.Swerve(-x,-y,-twist,-gyro.getAngle(),fieldOrient);
