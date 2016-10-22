@@ -181,17 +181,10 @@ public class SwerveDrive
 		FLeFake.pidSet(FLe.pidGet());
 		BReFake.pidSet(BRe.pidGet());
 		BLeFake.pidSet(BLe.pidGet());
-		frEnc = FReFake.pidGet();
-		flEnc = FLeFake.pidGet();
-		brEnc = BReFake.pidGet();
-		blEnc = BLeFake.pidGet();
 		FRc.setSetpoint(wa2*(SteerEncMax/360.0f));
 		FLc.setSetpoint(wa1*(SteerEncMax/360.0f));
 		BRc.setSetpoint(wa3*(SteerEncMax/360.0f));
 		BLc.setSetpoint(wa4*(SteerEncMax/360.0f));
-		
-		System.out.println("Actual: " + FRe.getVoltage());
-		System.out.println("Setpoint: " + FRc.getSetpoint());
 	}
 	
 	void SetupLogging(Logger logger)
