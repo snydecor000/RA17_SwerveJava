@@ -51,7 +51,7 @@ public class SwerveModule
 		PIDc.enable();
 	}
 	
-	public void SetDrive(double speed)
+	public void setDrive(double speed)
 	{
 		drive.set(speed);
 	}
@@ -61,7 +61,7 @@ public class SwerveModule
 		encFake.pidSet(encoder.pidGet());
 	}
 	
-	public void SetAngle(double angle)
+	public void setAngle(double angle)
 	{
 		PIDc.setSetpoint(angle*(SteerEncMax/360.0f));
 	}
