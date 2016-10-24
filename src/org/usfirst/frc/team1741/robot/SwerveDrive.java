@@ -82,10 +82,36 @@ public class SwerveDrive
 		FLM.PIDSet();
 		BRM.PIDSet();
 		BLM.PIDSet();
+		
+		if(Math.abs(FRM.pidGet()/(FRM.getEncMax()/360.0f) - wa2) > 90)
+		{
+			wa2 = (wa2 + 180)%360;
+			ws2 = -ws2;
+		}
+		if(Math.abs(FLM.pidGet()/(FLM.getEncMax()/360.0f) - wa1) > 90)
+		{
+			wa1 = (wa1 + 180)%360;
+			ws1 = -ws1;
+		}
+		if(Math.abs(BRM.pidGet()/(BRM.getEncMax()/360.0f) - wa3) > 90)
+		{
+			wa3 = (wa3 + 180)%360;
+			ws3 = -ws3;
+		}
+		if(Math.abs(BLM.pidGet()/(BLM.getEncMax()/360.0f) - wa4) > 90)
+		{
+			wa4 = (wa4 + 180)%360;
+			ws4 = -ws4;
+		}
+		
 		FRM.setAngle(wa2);
 		FLM.setAngle(wa1);
 		BRM.setAngle(wa3);
 		BLM.setAngle(wa4);
+//		FRM.setAngleDrive(wa2,ws2);
+//		FLM.setAngleDrive(wa1,-ws1);
+//		BRM.setAngleDrive(wa3,ws3);
+//		BLM.setAngleDrive(wa4,-ws4);
 	}
 	
 	void SetupLogging(Logger logger)

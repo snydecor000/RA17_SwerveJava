@@ -51,9 +51,31 @@ public class SwerveModule
 		PIDc.enable();
 	}
 	
+	public void setAngleDrive(double speed, double angle)
+	{
+//		if(Math.abs(encFake.pidGet()/(SteerEncMax/360.0f) - angle) > 90)
+//		{
+//			angle = (angle + 180)%360;
+//			speed = -speed;
+//		}
+//		
+		setDrive(speed);
+		setAngle(angle);
+	}
+	
 	public void setDrive(double speed)
 	{
 		drive.set(speed);
+	}
+	
+	public double pidGet()
+	{
+		return encFake.pidGet();
+	}
+	
+	public double getEncMax()
+	{
+		return SteerEncMax;
 	}
 	
 	public void PIDSet()
