@@ -84,7 +84,8 @@ public class SwerveModule
 		logger.Log(s + "speed", drive.getSpeed());
 		logger.Log(s + "Apos", angle.getEncPosition());
 		logger.Log(s + "ACurrent", angle.getOutputCurrent());
-		logger.Log(s + "Encpos", encoder.getVoltage() + encFake.m_offset);
+		//logger.Log(s + "Encpos", encoder.getVoltage() + encFake.m_offset);
+		logger.Log(s + "Encpos", encoder.getVoltage());
 		logger.Log(s + "EncSetpoint", PIDc.getSetpoint());
 	}
 	
