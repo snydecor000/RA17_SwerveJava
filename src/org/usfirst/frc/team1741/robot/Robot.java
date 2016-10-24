@@ -89,10 +89,10 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData("Auto choices", chooser);
         System.out.println("test1");
 		////////////////////////////////////////////////
-//		gyro = new AnalogGyro(3);
-//		gyro.setSensitivity(0.007);
-//		gyro.reset();
-//		gyro.calibrate();
+		gyro = new AnalogGyro(1);
+		gyro.setSensitivity(0.007);
+		gyro.reset();
+		gyro.calibrate();
 		acceler = new BuiltInAccelerometer();
 		System.out.println("test2");
 		////////////////////////////////////////////////
@@ -102,7 +102,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("test3");
 		////////////////////////////////////////////////
 		FRe = new AnalogInput(0);
-		FLe = new AnalogInput(1);
+		FLe = new AnalogInput(3);
 		BRe = new AnalogInput(2);
 		BLe = new AnalogInput(4);
 	   	FR = new CANTalon(1);

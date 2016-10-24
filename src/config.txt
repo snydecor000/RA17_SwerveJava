@@ -15,10 +15,12 @@ turningSpeedFactor = 1
 driveCIMmaxRPM = 4000
 
 #SteerEncMax = 4.792
-SteerEncMaxFR = 4.792
-SteerEncMaxFL = 4.792
-SteerEncMaxBR = 4.792
-SteerEncMaxBL = 4.792
+SteerEncMaxBL = 4.895
+SteerEncMaxBR = 4.9035
+SteerEncMaxFL = 4.9206
+SteerEncMaxFR = 4.916992
+
+
 SteerEncOffsetFR = 3.05
 SteerEncOffsetFL = 2.1
 SteerEncOffsetBR = 2.1
