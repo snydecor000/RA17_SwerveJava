@@ -141,4 +141,9 @@ public class SwerveDrive
 		BRM.ReloadConfig("BR");
 		BLM.ReloadConfig("BL");
 	}
+	
+	public String toString()
+	{
+		return "FR Speed: " + FRM.getTurnSpeed() + "\n" +"FL Speed: " + FLM.getTurnSpeed() + "\n" +"BR Speed: " + BRM.getTurnSpeed() + "\n" +"BL Speed: " + BLM.getTurnSpeed() + "\n";
+	}
 }

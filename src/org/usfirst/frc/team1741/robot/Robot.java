@@ -187,6 +187,8 @@ public class Robot extends IterativeRobot {
     	}
     	
     	Log(timer.get());
+    	
+    	System.out.print(drive);
     }
     
     public void testInit() 

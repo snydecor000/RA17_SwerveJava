@@ -10,6 +10,8 @@ public class FakePIDSource implements PIDSource
 	private double m_min;
 	private double m_max;
 	private double m_diff;
+	private double m_speed;
+	private Double m_lastPos;
 	
 	FakePIDSource(double offset,double min,double max)
 	{
@@ -33,6 +35,9 @@ public class FakePIDSource implements PIDSource
 	@Override
 	public double pidGet() 
 	{
+		if(m_lastPos == null) { m_lastPos = m_value; }
+		m_speed = m_value - m_lastPos;
+		m_lastPos = m_value;
 		return m_value;
 	}
 	
@@ -53,6 +58,11 @@ public class FakePIDSource implements PIDSource
 			m_diff = m_min - m_value;//get difference
 			m_value = m_max - m_diff;//sets value to wrap from min to max and subtract the diff
 		}
+	}
+	
+	public double getSpeed()
+	{
+		return m_speed;
 	}
 	
 	public void setOffset(double offset)

@@ -4,13 +4,10 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDController;
 
-public class SwerveModule 
+public class SwerveModule
 {
 	private double SteerP,SteerI,SteerD;
-	@SuppressWarnings("unused")
-	private double SpeedP,SpeedI,SpeedD;
-	@SuppressWarnings("unused")
-	private double SteerSpeed,SteerTolerance,SteerEncMax,TurningSpeedFactor,DriveCIMMaxRPM;
+	private double SteerSpeed,SteerTolerance,SteerEncMax;
 	private double SteerOffset;
 	
 	private CANTalon drive;
@@ -27,8 +24,6 @@ public class SwerveModule
 		SteerTolerance = Config.GetSetting("Steering%Tolerance", .25);
 		SteerSpeed = Config.GetSetting("SteerSpeed", 1);
 		SteerEncMax = Config.GetSetting("SteerEncMax",4.792);
-		TurningSpeedFactor = Config.GetSetting("turningSpeedFactor", 1);
-		DriveCIMMaxRPM = Config.GetSetting("driveCIMmaxRPM",4000);
 		SteerOffset = Config.GetSetting("SteerEncOffset",0);
 		
 		drive = d;
@@ -53,14 +48,19 @@ public class SwerveModule
 	
 	public void setAngleDrive(double speed, double angle)
 	{
-//		if(Math.abs(encFake.pidGet()/(SteerEncMax/360.0f) - angle) > 90)
-//		{
-//			angle = (angle + 180)%360;
-//			speed = -speed;
-//		}
-//		
+		if(Math.abs(encFake.pidGet()/(SteerEncMax/360.0f) - angle) > 90)
+		{
+			angle = (angle + 180)%360;
+			speed = -speed;
+		}
+		
 		setDrive(speed);
 		setAngle(angle);
+	}
+	
+	public double getTurnSpeed()
+	{
+		return encFake.getSpeed();
 	}
 	
 	public void setDrive(double speed)
@@ -97,6 +97,7 @@ public class SwerveModule
 		logger.AddAttribute(s + "ACurrent");
 		logger.AddAttribute(s + "Encpos");
 		logger.AddAttribute(s + "EncSetpoint");
+		logger.AddAttribute(s + "EncSpeed");
 	}
 	
 	public void Log(Logger logger, String s)
@@ -109,14 +110,11 @@ public class SwerveModule
 		//logger.Log(s + "Encpos", encoder.getVoltage() + encFake.m_offset);
 		logger.Log(s + "Encpos", encoder.getVoltage());
 		logger.Log(s + "EncSetpoint", PIDc.getSetpoint());
+		logger.Log(s + "EncSpeed", encFake.getSpeed());
 	}
 	
 	public void ReloadConfig(String s)
 	{
-	/////////////////////////////////////////////////////
-		SpeedP = Config.GetSetting("speedP",1);
-		SpeedI = Config.GetSetting("speedI",0);
-		SpeedD = Config.GetSetting("speedD",0);
 	/////////////////////////////////////////////////////
 		SteerP = Config.GetSetting("steerP",2);
 		SteerI = Config.GetSetting("steerI",0);
@@ -129,9 +127,6 @@ public class SwerveModule
 		PIDc.setInputRange(0,SteerEncMax);
 		PIDc.setOutputRange(-SteerSpeed,SteerSpeed);
 		PIDc.setPercentTolerance(SteerTolerance);
-	/////////////////////////////////////////////////////
-		TurningSpeedFactor = Config.GetSetting("turningSpeedFactor", 1);
-		DriveCIMMaxRPM = Config.GetSetting("driveCIMmaxRPM",4000);
 	/////////////////////////////////////////////////////
 		SteerOffset = Config.GetSetting("SteerEncOffset" + s,0);
 		encFake.setOffset(SteerOffset);
