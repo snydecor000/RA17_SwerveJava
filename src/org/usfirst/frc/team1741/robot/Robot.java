@@ -299,6 +299,7 @@ public class Robot extends IterativeRobot {
 	void SetupLogging()
 	{
 		logger.addLoggable(drive);
+		logger.addLoggable(targeting);
 		logger.AddAttribute("Time");
 		logger.AddAttribute("AccX");
 		logger.AddAttribute("AccY");

@@ -6,7 +6,7 @@ import java.util.List;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
-public class Targeting 
+public class Targeting implements Loggable
 {
 	private static NetworkTable grip;
 	private String trackingBlob;
@@ -32,12 +32,12 @@ public class Targeting
 		return targets;
 	}
 
-	public void SetupLogging(Logger logger)
+	public void setupLogging(Logger logger)
 	{
 		logger.AddAttribute("TrackingbBlob");
 	}
 
-	public void Log(Logger logger)
+	public void log(Logger logger)
 	{
 		trackingBlob = grip.getString("targets", "");
 		if(!trackingBlob.equals(""))
