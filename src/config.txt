@@ -1,5 +1,9 @@
 #Config File
 #################################
+AutoAimP = 0.12
+AutoAimI = 0.0
+AutoAimD = 0.0
+
 #Swerve Variables:
 speedP = 1
 speedI = 0
@@ -19,7 +23,6 @@ SteerEncMaxBL = 4.895
 SteerEncMaxBR = 4.9035
 SteerEncMaxFL = 4.9206
 SteerEncMaxFR = 4.916992
-
 
 SteerEncOffsetFR = 3.10
 SteerEncOffsetFL = 3.85
