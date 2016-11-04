@@ -3,7 +3,7 @@ package org.usfirst.frc.team1741.robot;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
 
-public class SwerveDrive 
+public class SwerveDrive implements Loggable
 {
 	private static final double PI = 3.14159265358979;
 	
@@ -23,10 +23,10 @@ public class SwerveDrive
 	//SwerveDrive(CANTalon fr,CANTalon fra, AnalogInput fre)
 	SwerveDrive(CANTalon fr, CANTalon fra, AnalogInput fre, CANTalon fl, CANTalon fla, AnalogInput fle, CANTalon br, CANTalon bra, AnalogInput bre, CANTalon bl, CANTalon bla, AnalogInput ble)
 	{
-		FRM = new SwerveModule(fr, fra, fre);
-		FLM = new SwerveModule(fl, fla, fle);
-		BRM = new SwerveModule(br, bra, bre);
-		BLM = new SwerveModule(bl, bla, ble);
+		FRM = new SwerveModule(fr, fra, fre, "FR");
+		FLM = new SwerveModule(fl, fla, fle, "FL");
+		BRM = new SwerveModule(br, bra, bre, "BR");
+		BLM = new SwerveModule(bl, bla, ble, "BL");
 
 		length = Config.GetSetting("FrameLength",1);
 		width = Config.GetSetting("FrameWidth",1);
@@ -114,20 +114,22 @@ public class SwerveDrive
 //		BLM.setAngleDrive(wa4,-ws4);
 	}
 	
-	void SetupLogging(Logger logger)
+	@Override
+	public void setupLogging(Logger logger)
 	{
-		FRM.SetupLogging(logger, "FR");
-		FLM.SetupLogging(logger, "FL");
-		BRM.SetupLogging(logger, "BR");
-		BLM.SetupLogging(logger, "BL");
+		FRM.setupLogging(logger);
+		FLM.setupLogging(logger);
+		BRM.setupLogging(logger);
+		BLM.setupLogging(logger);
 	}
-
-	void Log(Logger logger)
+	
+	@Override
+	public void log(Logger logger)
 	{
-		FRM.Log(logger, "FR");
-		FLM.Log(logger, "FL");
-		BRM.Log(logger, "BR");
-		BLM.Log(logger, "BL");
+		FRM.log(logger);
+		FLM.log(logger);
+		BRM.log(logger);
+		BLM.log(logger);
 	}
 
 	void ReloadConfig()

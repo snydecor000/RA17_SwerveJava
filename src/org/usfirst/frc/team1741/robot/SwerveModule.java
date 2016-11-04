@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.PIDController;
 
-public class SwerveModule
+public class SwerveModule implements Loggable
 {
 	private double SteerP,SteerI,SteerD;
 	private double SteerSpeed,SteerTolerance,SteerEncMax;
@@ -15,8 +15,9 @@ public class SwerveModule
 	private AnalogInput encoder;
 	private PIDController PIDc;
 	private FakePIDSource encFake;
+	private String s;
 	
-	public SwerveModule(CANTalon d, CANTalon a, AnalogInput e)
+	public SwerveModule(CANTalon d, CANTalon a, AnalogInput e, String name)
 	{
 		SteerP = Config.GetSetting("steerP",2);
 		SteerI = Config.GetSetting("steerI",0);
@@ -44,6 +45,7 @@ public class SwerveModule
 		PIDc.setPercentTolerance(SteerTolerance);
 		PIDc.setSetpoint(2.4);
 		PIDc.enable();
+		s=name;
 	}
 	
 	public void setAngleDrive(double speed, double angle)
@@ -88,7 +90,8 @@ public class SwerveModule
 		PIDc.setSetpoint(angle*(SteerEncMax/360.0f));
 	}
 	
-	public void SetupLogging(Logger logger, String s)
+	@Override
+	public void setupLogging(Logger logger)
 	{
 		logger.AddAttribute(s + "pos");
 		logger.AddAttribute(s + "Current");
@@ -100,7 +103,8 @@ public class SwerveModule
 		logger.AddAttribute(s + "EncSpeed");
 	}
 	
-	public void Log(Logger logger, String s)
+	@Override
+	public void log(Logger logger)
 	{
 		logger.Log(s + "pos", drive.getEncPosition());
 		logger.Log(s + "Current", drive.getOutputCurrent());

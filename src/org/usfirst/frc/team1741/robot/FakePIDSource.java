@@ -19,6 +19,13 @@ public class FakePIDSource implements PIDSource
 		m_min = min;
 		m_max = max;
 	}
+	
+	FakePIDSource()
+	{
+		m_offset = 0.00f;
+		m_min = Double.MIN_VALUE;
+		m_max = Double.MAX_VALUE;
+	}
 
 	@Override
 	public void setPIDSourceType(PIDSourceType pidSource) 

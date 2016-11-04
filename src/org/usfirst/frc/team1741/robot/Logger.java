@@ -2,7 +2,9 @@ package org.usfirst.frc.team1741.robot;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Logger 
@@ -10,10 +12,12 @@ public class Logger
 	private String filename;
 	private PrintWriter m_log = null;
 	private Map<String, String> m_fields;
+	private List<Loggable> loggables;
 
 	Logger()
 	{
 		m_fields = new LinkedHashMap<String,String>();
+		loggables = new ArrayList<Loggable>();
 	}
 
 	boolean Open(String filename)
@@ -114,5 +118,27 @@ public class Logger
 	String Normalize(String str)
 	{
 		return str.toLowerCase();
+	}
+	
+	public void addLoggable(Loggable l)
+	{
+		loggables.add(l);
+	}
+	
+	public void setupLoggables()
+	{
+		for(Loggable l : loggables)
+		{
+			l.setupLogging(this);
+		}
+	}
+	
+	public void logAll()
+	{
+		for(Loggable l : loggables)
+		{
+			l.log(this);
+		}
+		this.WriteLine();
 	}
 }

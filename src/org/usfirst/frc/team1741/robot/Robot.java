@@ -3,12 +3,15 @@ package org.usfirst.frc.team1741.robot;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Vector;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,11 +43,17 @@ public class Robot extends IterativeRobot {
 	AnalogInput FLe;
 	AnalogInput BRe;
 	AnalogInput BLe;
+	
+	Targeting targeting;
+	PIDController driveAimer;
+	FakePIDSource cameraSource;
+	FakePIDOutput driveOutput;
 	//EdgeDetect config;
 	
 	double x;
 	double y;
 	double twist;
+	double autoAimOffset;
 	boolean fieldOrient;
 	boolean configReload;
     
@@ -75,8 +84,9 @@ public class Robot extends IterativeRobot {
 		x = 0;
 		y = 0;
 		twist = 0;
+		autoAimOffset = 0;
 		fieldOrient = true;
-		//config = null;
+		driveAimer = null;
     }
 
     public void robotInit() 
@@ -120,8 +130,20 @@ public class Robot extends IterativeRobot {
 		System.out.println("test5");
 		////////////////////////////////////////////////
 		driveMode = new EdgeDetect();
+		targeting = new Targeting();
 		//config = new EdgeDetect();
 		System.out.println("test6");
+		////////////////////////////////////////////////
+		cameraSource = new FakePIDSource();
+		driveOutput = new FakePIDOutput();
+		driveAimer = new PIDController(Config.GetSetting("AutoAimP", 0.12),
+									   Config.GetSetting("AutoAimI", 0.00),
+									   Config.GetSetting("AutoAimD", 0.00),
+									   cameraSource,
+									   driveOutput);
+		driveAimer.setInputRange(-24,24);
+		driveAimer.setOutputRange(-.3,.3);
+		driveAimer.setAbsoluteTolerance(.5);
     }
 
 	public void autonomousInit() 
@@ -145,13 +167,12 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopInit()
-    {
-    	StartLogging("teleop",logger);
-    	SetupLogging();
-    	ReloadConfig();
-    	timer.reset();
-    	timer.start();
-    }
+    { StartLogging("teleop",logger)
+    ; SetupLogging()
+    ; ReloadConfig()
+    ; timer.reset()
+    ; timer.start()
+    ; }
     
     public void teleopPeriodic() 
     {
@@ -178,16 +199,53 @@ public class Robot extends IterativeRobot {
     		gyro.reset();
     	}
     	
-    	drive.Swerve(-x,-y,-twist,-gyro.getAngle(),fieldOrient);
+    	
     	//drive.Swerve(-x,-y,-twist,0,true);
        	if(driver.GetBack())
     	{
     		//configReload = !configReload;
     		ReloadConfig();
     	}
-    	
+       	
+       	if(driver.GetRightBumper())
+       	{
+    		List<Target> targets;
+    		targets = targeting.GetTargets();
+    		if(targets.size() != 0)
+    		{
+    			if (!driveAimer.isEnabled())
+    			{
+    				driveAimer.enable();
+    			}
+    			Target closest = targets.get(0);
+    			for (int i = 0; i < targets.size(); i++)
+    			{
+    				if(targets.get(i).getDistance() < closest.getDistance())
+    				{
+    					closest = targets.get(i);
+    				}
+    			}
+    			cameraSource.pidSet(closest.getPan() + autoAimOffset);
+    			double output = driveOutput.pidGet();
+    			drive.Swerve(-x,-y,-output,-gyro.getAngle(),false);
+//    			//aimLoop->SetSetpoint(targetDegreeToTicks(closest.Tilt()) / 800 + autoAimOffset);
+    		}
+    		else
+    		{
+    			//light->Set(Relay::kReverse);
+//    			if (driveAimer->IsEnabled())
+//    			{
+//    				driveAimer->Disable();
+//    			}
+    			drive.Swerve(0, 0, 0, 0, false);;
+    		}
+       	}
+       	else
+       	{
+       		drive.Swerve(-x,-y,-twist,-gyro.getAngle(),fieldOrient);
+       	}
+       	
     	Log(timer.get());
-    	
     	System.out.print(drive);
     }
     
@@ -240,11 +298,12 @@ public class Robot extends IterativeRobot {
 
 	void SetupLogging()
 	{
+		logger.addLoggable(drive);
 		logger.AddAttribute("Time");
 		logger.AddAttribute("AccX");
 		logger.AddAttribute("AccY");
 		logger.AddAttribute("AccZ");
-		drive.SetupLogging(logger);
+		//drive.setupLogging(logger);
 		logger.WriteAttributes();
 	}
 
@@ -254,13 +313,13 @@ public class Robot extends IterativeRobot {
 		logger.Log("AccX", acceler.getX());
 		logger.Log("AccY", acceler.getY());
 		logger.Log("AccZ", acceler.getZ());
-		drive.Log(logger);
-		logger.WriteLine();
+		logger.logAll();
 	}
 
 	void ReloadConfig()
 	{
 		Config.LoadFromFile("/home/lvuser/config.txt");
+		autoAimOffset = Config.GetSetting("autoAimOffest", 0);
 		drive.ReloadConfig();
 	}
 }
