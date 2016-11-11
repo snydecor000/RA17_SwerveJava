@@ -65,10 +65,6 @@ public class SwerveDrive implements Loggable
 		if(ws3 > max){max = ws3;}
 		if(ws4 > max){max = ws4;}
 		if(max > 1){ws1 /= max;ws2 /= max;ws3 /= max;ws4 /= max;}
-		FRM.setDrive(ws2);
-		FLM.setDrive(-ws1);
-		BRM.setDrive(ws3);
-		BLM.setDrive(-ws4);
 
 		wa1 = Math.atan2(b,c) * 180.0f/PI;
 		wa2 = Math.atan2(b,d) * 180.0f/PI;
@@ -83,26 +79,36 @@ public class SwerveDrive implements Loggable
 		BRM.PIDSet();
 		BLM.PIDSet();
 		
-		if(Math.abs(FRM.pidGet()/(FRM.getEncMax()/360.0f) - wa2) > 90)
+		//System.out.println(!((Math.abs(x) > 0.1 && Math.abs(y) > 0.1)  && Math.abs(z) > 0.1));
+		if(!((Math.abs(x) > 0.1 || Math.abs(y) > 0.1) && Math.abs(z) > 0.1))
 		{
-			wa2 = (wa2 + 180)%360;
-			ws2 = -ws2;
+			
+			if(Math.abs(FRM.pidGet()/(FRM.getEncMax()/360.0f) - wa2) > 90)
+			{
+				wa2 = (wa2 + 180)%360;
+				ws2 = -ws2;
+			}
+			if(Math.abs(FLM.pidGet()/(FLM.getEncMax()/360.0f) - wa1) > 90)
+			{
+				wa1 = (wa1 + 180)%360;
+				ws1 = -ws1;
+			}
+			if(Math.abs(BRM.pidGet()/(BRM.getEncMax()/360.0f) - wa3) > 90)
+			{
+				wa3 = (wa3 + 180)%360;
+				ws3 = -ws3;
+			}
+			if(Math.abs(BLM.pidGet()/(BLM.getEncMax()/360.0f) - wa4) > 90)
+			{
+				wa4 = (wa4 + 180)%360;
+				ws4 = -ws4;
+			}
 		}
-		if(Math.abs(FLM.pidGet()/(FLM.getEncMax()/360.0f) - wa1) > 90)
-		{
-			wa1 = (wa1 + 180)%360;
-			ws1 = -ws1;
-		}
-		if(Math.abs(BRM.pidGet()/(BRM.getEncMax()/360.0f) - wa3) > 90)
-		{
-			wa3 = (wa3 + 180)%360;
-			ws3 = -ws3;
-		}
-		if(Math.abs(BLM.pidGet()/(BLM.getEncMax()/360.0f) - wa4) > 90)
-		{
-			wa4 = (wa4 + 180)%360;
-			ws4 = -ws4;
-		}
+
+		FRM.setDrive(ws2);
+		FLM.setDrive(-ws1);
+		BRM.setDrive(ws3);
+		BLM.setDrive(-ws4);
 		
 		FRM.setAngle(wa2);
 		FLM.setAngle(wa1);
