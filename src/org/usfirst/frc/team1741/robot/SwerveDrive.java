@@ -1,7 +1,8 @@
 package org.usfirst.frc.team1741.robot;
 
+import com.ctre.CANTalon;
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.CANTalon;
+//import edu.wpi.first.wpilibj.CANTalon;
 
 public class SwerveDrive implements Loggable
 {
